@@ -1,0 +1,205 @@
+body {
+    background-color: #F5F7F9;
+    font-family: "Roboto", sans-serif;
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    background-color: white;
+}
+
+h1 {
+    color: #484848;
+    margin: 1vh;
+}
+
+h2 {
+    margin: 0
+}
+
+.account-select {
+    justify-self: end;
+    align-self: center;
+    display: flex;
+    margin-right: 2vw;
+}
+
+.account-select img {
+    width: 1.5em;
+    height: auto;
+}
+.account-select span {
+    align-self: center;
+    margin-left: 0.2vw;
+}
+
+#dashboard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 5vw 15vw auto;
+    height: 100%;
+}
+
+#tool-select {
+    display: flex;
+    flex-direction: column;
+    padding: 3vh 0;
+    gap: 3%;
+    align-items: center;
+    background-color: #2B2F33;
+}
+
+#tool-select img {
+    width: 50%;
+    height: auto;
+}
+
+#contacts {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 3vh 0;
+    gap: 2vh;
+    align-items: center;
+    border-style: none solid none none;
+    border-color: #E8E8E8;
+    border-width: 2px;
+}
+
+.dashboard-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3vh 0;
+}
+
+/* TABLE STYLES */
+
+table {
+    /* border: 1px solid #ccc; */
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+  
+  table caption {
+    font-size: 1.5em;
+    margin: 0 0 .75em;
+  }
+  
+  table tr {
+    position: relative;
+  }
+
+  table tr::before {
+    content: ''; /* Required for pseudo-elements */
+    position: absolute;
+    bottom: 0; /* Position at the top */
+    left: 50%; /* Start from the middle */
+    width: 95%; /* Width of the border */
+    height: 1.5px; /* Border thickness */
+    background-color: #ddd; /* Border color */
+    transform: translateX(-50%); /* Center the border */
+}
+  
+  table th,
+  table td {
+    padding: .625em;
+    text-align: center;
+  }
+  
+  table th {
+    font-size: .85em;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  
+  @media screen and (max-width: 600px) {
+    #dashboard {
+        grid-template-columns: 10vw 20vw auto;
+    }
+    table {
+      border: 0;
+    }
+  
+    table caption {
+      font-size: 1.3em;
+    }
+    
+    table thead {
+      border: none;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+    
+    table tr {
+      border-bottom: 3px solid #ddd;
+      display: block;
+      margin-bottom: .625em;
+    }
+    
+    table td {
+      border-bottom: 1px solid #ddd;
+      display: block;
+      font-size: .8em;
+      text-align: right;
+    }
+    
+    table td::before {
+      /*
+      * aria-label has no advantage, it won't be read inside a table
+      content: attr(aria-label);
+      */
+      content: attr(data-label);
+      float: left;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    
+    table td:last-child {
+      border-bottom: 0;
+    }
+  }
+  
+/* PAGINATION CONTROLLS */
+
+.pagination {
+    margin-top: auto; /* Push to the bottom of the parent */
+    justify-self: flex-end;
+    display: flex; /* Use flexbox for layout */
+    padding: 10px; /* Space around the pagination */
+}
+
+.pagination a {
+    padding: 10px 15px; /* Space inside each link */
+    margin: 0 5px; /* Space between links */
+    text-decoration: none; /* Remove underline */
+    color: #007bff; /* Link color */
+    border: 1px solid #007bff; /* Border color */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s; /* Smooth background change */
+}
+
+.pagination a:hover {
+    background-color: #007bff; /* Background on hover */
+    color: white; /* Text color on hover */
+}
+
+.pagination a.active {
+    background-color: #007bff; /* Background for active page */
+    color: white; /* Text color for active page */
+    border: none; /* Remove border for active page */
+}
+
+  
