@@ -2,81 +2,301 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Flask App</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Flask App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
-    <header>
-        <h1>CRM de Gabriel Yrigoyen</h1>
-        <div class="account-select"><img src="{{ url_for('static', filename='manager.png') }}"
-                alt="manager-pic"><span>gabriel.admin</span></div>
-    </header>
-    <div id="dashboard">
-        <div id="tool-select">
-            <img src="{{ url_for('static', filename='contact-book-grey.png') }}" alt="">
-            <img src="{{ url_for('static', filename='bar-chart-grey.png') }}" alt="">
-        </div>
-        <div id="contacts">
-            <h2>Contactos</h2>
-        <span>{{ message }}</span>
-        <span>Clientes de compañia 2</span></div>
-        <div class="dashboard-content">
-            <table>
-                <caption>{{ message }}</caption>
-                <thead>
-                  <tr>
-                    <th scope="col">Account</th>
-                    <th scope="col">Due Date</th>
-                    <th scope="col">Amount</th>
-                    <th scope="col">Period</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td data-label="Account">Visa - 3412</td>
-                    <td data-label="Due Date">04/01/2016</td>
-                    <td data-label="Amount">$1,190</td>
-                    <td data-label="Period">03/01/2016 - 03/31/2016</td>
-                  </tr>
-                  <tr>
-                    <td scope="row" data-label="Account">Visa - 6076</td>
-                    <td data-label="Due Date">03/01/2016</td>
-                    <td data-label="Amount">$2,443</td>
-                    <td data-label="Period">02/01/2016 - 02/29/2016</td>
-                  </tr>
-                  <tr>
-                    <td scope="row" data-label="Account">Corporate AMEX</td>
-                    <td data-label="Due Date">03/01/2016</td>
-                    <td data-label="Amount">$1,181</td>
-                    <td data-label="Period">02/01/2016 - 02/29/2016</td>
-                  </tr>
-                  <tr>
-                    <td scope="row" data-label="Acount">Visa - 3412</td>
-                    <td data-label="Due Date">02/01/2016</td>
-                    <td data-label="Amount">$842</td>
-                    <td data-label="Period">01/01/2016 - 01/31/2016</td>
-                  </tr>
-                </tbody>
-              </table>
-              <div class="pagination">
-                <a href="#" class="active">1</a>
-                <a href="#">2</a>
-                <a href="#">3</a>
-                <a href="#">4</a>
-                <a href="#">5</a>
-                <a href="#">Next</a>
-            </div>
-            
-        </div>
+  <header>
+    <h1>CRM de Gabriel Yrigoyen</h1>
+    <div class="account-select"><img src="{{ url_for('static', filename='manager.png') }}"
+        alt="manager-pic"><span>gabriel.admin</span></div>
+  </header>
+  <div id="dashboard">
+    <div id="tool-select">
+      <img src="{{ url_for('static', filename='contact-book-grey.png') }}" alt="">
+      <img src="{{ url_for('static', filename='checklist-grey.png') }}" alt="">
+      <img src="{{ url_for('static', filename='bar-chart-grey.png') }}" alt="">
+      
+
     </div>
+    <div id="contacts">
+      <h2>Contactos</h2>
+      <span>{{ message }}</span>
+      <span>Clientes de compañia 2</span>
+    </div>
+    <div class="dashboard-content">
+      <table>
+        <caption>{{ message }}</caption>
+        <thead>
+          <tr>
+            <th scope="col">Account</th>
+            <th scope="col">Due Date</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Period</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Account">Visa - 3412</td>
+            <td data-label="Due Date">04/01/2016</td>
+            <td data-label="Amount">$1,190</td>
+            <td data-label="Period">03/01/2016 - 03/31/2016</td>
+          </tr>
+          <tr>
+            <td scope="row" data-label="Account">Visa - 6076</td>
+            <td data-label="Due Date">03/01/2016</td>
+            <td data-label="Amount">$2,443</td>
+            <td data-label="Period">02/01/2016 - 02/29/2016</td>
+          </tr>
+          <tr>
+            <td scope="row" data-label="Account">Corporate AMEX</td>
+            <td data-label="Due Date">03/01/2016</td>
+            <td data-label="Amount">$1,181</td>
+            <td data-label="Period">02/01/2016 - 02/29/2016</td>
+          </tr>
+          <tr>
+            <td scope="row" data-label="Acount">Visa - 3412</td>
+            <td data-label="Due Date">02/01/2016</td>
+            <td data-label="Amount">$842</td>
+            <td data-label="Period">01/01/2016 - 01/31/2016</td>
+          </tr>
+        </tbody>
+      </table>
+      <section id="charts">
+        <div class="container horizontal rounded">
+          <h2>Horizontal, Rounded</h2>
+          <div class="progress-bar horizontal">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>100%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-bar horizontal">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>75%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-bar horizontal">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>60%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-bar horizontal">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>20%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-bar horizontal">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>34%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-bar horizontal">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>82%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Horizontal, flat -->
+
+        <div class="container horizontal flat">
+          <h2>Horizontal, Flat</h2>
+          <div class="progress-bar horizontal">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>100%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-bar horizontal">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>75%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-bar horizontal">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>60%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-bar horizontal">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>20%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-bar horizontal">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>34%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-bar horizontal">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>82%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Vertical, rounded -->
+
+
+        <div class="container vertical rounded">
+          <h2>Vertical, Rounded</h2>
+          <div class="progress-bar">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>100%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-bar">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>75%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-bar">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>60%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-bar">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>20%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-bar">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>34%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-bar">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>82%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Vertical, flat -->
+
+
+        <div class="container vertical flat">
+          <h2>Vertical, Flat</h2>
+          <div class="progress-bar">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>100%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-bar">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>75%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-bar">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>60%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-bar">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>20%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-bar">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>34%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-bar">
+            <div class="progress-track">
+              <div class="progress-fill">
+                <span>82%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="pagination">
+        <a href="#" class="active">1</a>
+        <a href="#">2</a>
+        <a href="#">3</a>
+        <a href="#">4</a>
+        <a href="#">5</a>
+        <a href="#">Next</a>
+      </section>
+
+    </div>
+  </div>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 
 </html>
