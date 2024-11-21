@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='calendar.css') }}">
+</head>
+
+<body>
+  <header>
+    <a href="/"><h1>CRM de Gabriel Yrigoyen</h1></a>
+    <div class="account-select"><img src="{{ url_for('static', filename='manager.png') }}"
+        alt="manager-pic"><span>gabriel.admin</span></div>
+  </header>
+  <div id="dashboard">
+    <div id="tool-select">
+      <a href="/contacts"><img src="{% if message == 'Clientes' %}{{ url_for('static', filename='contact-book-white.png') }}{% else %}{{ url_for('static', filename='contact-book-grey.png') }}{% endif %}" alt=""></a>
+      <a href="/tickets"><img src="{% if message == 'Tickets' %}{{ url_for('static', filename='checklist-white.png') }}{% else %}{{ url_for('static', filename='checklist-grey.png') }}{% endif %}" alt=""></a>
+      <a href="/cases"><img src="{% if message == 'Casos' %}{{ url_for('static', filename='case-white.png') }}{% else %}{{ url_for('static', filename='case-grey.png') }}{% endif %}" alt=""></a>
+      <a href="/report"><img src="{% if message == 'Report' %}{{ url_for('static', filename='bar-chart-white.png') }}{% else %}{{ url_for('static', filename='bar-chart-grey.png') }}{% endif %}" alt=""></a>
+      <a href="/calendar"><img src="{% if message == 'Calendar' %}{{ url_for('static', filename='calendar-white.png') }}{% else %}{{ url_for('static', filename='calendar-grey.png') }}{% endif %}" alt=""></a>
+    </div>

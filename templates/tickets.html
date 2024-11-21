@@ -1,0 +1,67 @@
+{% include 'header.html' %}
+<!-- <div id="contacts">
+    <h2>Compañia</h2>
+    <h3><u>Hispano Legal Partners</u></h3>
+    <h3>LexLatina Abogados</h3>
+    <h3>Justicia & Asociados</h3>
+  </div> -->
+  <div id="tickets" class="dashboard-content">
+<table>
+    <caption>{{ message }}</caption>
+    <thead>
+      <tr>
+        <th scope="col"><span>Estado <img class="filter" src="{{ url_for('static', filename='select-all.png') }}" alt=""></span></th>
+        <th scope="col">Tarea</td>
+        <th scope="col">Caso</th> 
+        <th scope="col">Contacto</th>
+        <th scope="col"><span>Fecha Tope<img class="filter" src="{{ url_for('static', filename='arrow-grey.png') }}" alt=""></span></th>
+        <th scope="col"><span>Prioridad<img class="filter" src="{{ url_for('static', filename='arrow-grey.png') }}" alt=""></span></th>
+    </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td data-label="Due Date"><img class="filter" src="{{ url_for('static', filename='check-green.png') }}" alt=""></td>
+        <td data-label="Due Date">Llamar al cliente para informar resolucion de accidente</td>
+        <td data-label="Amount"><a href="">Ver</a></td>
+        <td data-label="Amount"><a href="">Ver</a></td>
+        <td data-label="Due Date">Marzo 15</td>
+        <td data-label="Period"><span class="estado rojo">Alta</span></td>
+      </tr>
+      <tr>
+        <td data-label="Due Date"><img class="filter" src="{{ url_for('static', filename='check-grey.png') }}" alt=""></td>
+        <td data-label="Due Date">Cargos por documentos apostillados</td>
+        <td data-label="Amount"><a href="">Ver</a></td>
+        <td data-label="Amount"><a href="">Ver</a></td>
+        <td data-label="Due Date">Julio 8</td>
+        <td data-label="Period"><span class="estado verde">Baja</span></td>
+      </tr>
+      <tr>
+        <td data-label="Due Date"><img class="filter" src="{{ url_for('static', filename='check-grey.png') }}" alt=""></td>
+        <td data-label="Due Date">Resolucion de divorcio</td>
+        <td data-label="Amount"><a href="">Ver</a></td>
+        <td data-label="Amount"><a href="">Ver</a></td>
+        <td data-label="Due Date">Noviembre 22</td>
+        <td data-label="Period"><span class="estado amarillo">Media</span></td>
+      </tr>
+      <tr>
+        <td data-label="Due Date"><img class="filter" src="{{ url_for('static', filename='check-grey.png') }}" alt=""></td>
+        <td data-label="Due Date">Agendar llamada con el abogado rodriguez</td>
+        <td data-label="Amount"><a href="">Ver</a></td>
+        <td data-label="Amount"><a href="">Ver</a></td>
+        <td data-label="Due Date">Enero 30</td>
+        <td data-label="Period"><span class="estado verde">Baja</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <section class="pagination">
+    <a href="#" class="active">1</a>
+    <a href="#">2</a>
+    <a href="#">3</a>
+    <a href="#">4</a>
+    <a href="#">5</a>
+    <a href="#">Next</a>
+  </section>
+</div>
+</div>
+
+{% include 'footer.html' %}

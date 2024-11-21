@@ -7,6 +7,19 @@ body {
     flex-direction: column;
 }
 
+a {
+ text-decoration: none;
+}
+
+th span {
+  display: flex;
+  justify-content: center;
+}
+
+th span img {
+  padding-left: 0.2rem;
+}
+
 header {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -20,6 +33,11 @@ h1 {
 
 h2 {
     margin: 0
+}
+
+h3 {
+  text-align: center;
+  padding: 0 1vw;
 }
 
 .account-select {
@@ -45,13 +63,22 @@ h2 {
     height: 100%;
 }
 
+#tickets {
+  grid-column: span 2;
+}
 #tool-select {
     display: flex;
     flex-direction: column;
     padding: 3vh 0;
-    gap: 3%;
+    gap: 3vh;
     align-items: center;
     background-color: #2B2F33;
+}
+
+#tool-select a {
+  display: flex;
+  justify-content: center;
+  align-items: center; 
 }
 
 #tool-select img {
@@ -76,6 +103,29 @@ h2 {
     flex-direction: column;
     align-items: center;
     padding: 3vh 0;
+}
+
+.estado {
+  padding: 0.3rem 0.5rem;
+  border-radius: 1rem;
+  color: white;
+}
+.rojo {
+background-color: red;
+}
+
+.verde {
+  background-color: green;
+  }
+
+.amarillo {
+  background-color: yellow;
+  color: black;
+}
+
+.filter {
+  height: 1rem;
+  width: auto;
 }
 
 /* TABLE STYLES */

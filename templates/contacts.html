@@ -1,0 +1,67 @@
+{% include 'header.html' %}
+<div id="contacts">
+    <h2>Compañia</h2>
+    <h3><u>Hispano Legal Partners</u></h3>
+    <h3>LexLatina Abogados</h3>
+    <h3>Justicia & Asociados</h3>
+  </div>
+  <div class="dashboard-content">
+<table>
+    <caption>{{ message }}</caption>
+    <thead>
+      <tr>
+        <th scope="col">Nombre Completo</th>
+        <th scope="col">ID</td>
+        <th scope="col"><span>Fecha de nacimiento<img class="filter" src="{{ url_for('static', filename='arrow-grey.png') }}" alt=""></span></th> 
+        <th scope="col">Contactos</th>
+        <th scope="col">Casos</th>
+        <th scope="col"><span>Actividad<img class="filter" src="{{ url_for('static', filename='arrow-grey.png') }}" alt=""></span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td data-label="Nombre Completo">Paolo Vias Tenorio</td>
+        <td data-label="Due Date">045-300199-0005J</td>
+        <td data-label="Due Date">Marzo 15, 1995</td>
+        <td data-label="Amount"><a href="">Ver</a></td>
+        <td data-label="Amount"><a href="">Ver</a></td>
+        <td data-label="Period"><span class="estado rojo">Inactivo</span></td>
+      </tr>
+      <tr>
+        <td scope="row" data-label="Account">Sophia Bennett Carter</td>
+        <td data-label="Due Date">001-230495-0003U</td>
+        <td data-label="Due Date">Julio 8, 1987</td>
+        <td data-label="Amount"><a href="">Ver</a></td>
+        <td data-label="Amount"><a href="">Ver</a></td>
+        <td data-label="Period"><span class="estado verde">Activo</span></td>
+      </tr>
+      <tr>
+        <td scope="row" data-label="Account">Ethan Alexander Torres</td>
+        <td data-label="Due Date">045-300199-0005J</td>
+        <td data-label="Due Date">Noviembre 22, 2003</td>
+        <td data-label="Amount"><a href="">Ver</a></td>
+        <td data-label="Amount"><a href="">Ver</a></td>
+        <td data-label="Period"><span class="estado verde">Activo</span></td>
+      </tr>
+      <tr>
+        <td scope="row" data-label="Acount">Isabella Grace Thompson</td>
+        <td data-label="Due Date">019-150387-0002L</td>
+        <td data-label="Due Date">Enero 30, 1990</td>
+        <td data-label="Amount"><a href="">Ver</a></td>
+        <td data-label="Amount"><a href="">Ver</a></td>
+        <td data-label="Period"><span class="estado rojo">Inactivo</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <section class="pagination">
+    <a href="#" class="active">1</a>
+    <a href="#">2</a>
+    <a href="#">3</a>
+    <a href="#">4</a>
+    <a href="#">5</a>
+    <a href="#">Next</a>
+  </section>
+</div>
+</div>
+
+{% include 'footer.html' %}
