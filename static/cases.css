@@ -1,0 +1,39 @@
+#cases {
+    display: flex;
+    width: 95%;
+    margin: 20px;
+    gap: 20px;
+}
+
+.case-list, .case-details, .notes-section {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.case-list {
+    flex: 2;
+    overflow-x: auto;
+}
+
+#estado-fix{
+    margin: 0.4rem auto auto;
+}
+
+.case-details {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.notes-section {
+    flex: 2;
+    overflow-x: auto;
+}
+
+.case-details a {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}

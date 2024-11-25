@@ -1,12 +1,13 @@
 {% include 'header.html' %}
-<div id="contacts">
+<div id="contacts-tools">
+<div id="groud-select">
     <h2>Compañia</h2>
     <h3><u>Hispano Legal Partners</u></h3>
     <h3>LexLatina Abogados</h3>
     <h3>Justicia & Asociados</h3>
   </div>
   <div class="dashboard-content">
-<table>
+<!-- <table>
     <caption>{{ message }}</caption>
     <thead>
       <tr>
@@ -52,16 +53,72 @@
         <td data-label="Period"><span class="estado rojo">Inactivo</span></td>
       </tr>
     </tbody>
-  </table>
-  <section class="pagination">
-    <a href="#" class="active">1</a>
-    <a href="#">2</a>
-    <a href="#">3</a>
-    <a href="#">4</a>
-    <a href="#">5</a>
-    <a href="#">Next</a>
-  </section>
-</div>
+  </table> -->
+
+  <table>
+    <caption>{{ message }}</caption>
+    <thead>
+      <tr>
+        <th scope="col">Nombre Completo</th>
+        <th scope="col">ID</th>
+        <th scope="col"><span>Fecha de nacimiento<img class="filter" src="{{ url_for('static', filename='arrow-grey.png') }}" alt=""></span></th> 
+        <th scope="col">Contactos</th>
+        <th scope="col">Casos</th>
+        <th scope="col"><span>Actividad<img class="filter" src="{{ url_for('static', filename='arrow-grey.png') }}" alt=""></span></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cliente in clientes %}
+      <tr>
+        <td data-label="Nombre Completo">{{ cliente[1] }}</td>
+        <td data-label="ID">{{ cliente[0] }}</td>
+        <td data-label="Fecha de nacimiento">{{ cliente[5] }}</td>
+        <td data-label="Contactos"><button class="verBtn" data-nombre="{{ cliente[1] }}" data-telefono="{{ cliente[2] }}" data-email="{{ cliente[3] }}">Ver</button></td>
+        <td data-label="Casos"><a href="/casos/{{ cliente[1] }}">Ver</a></td>
+        <td data-label="Actividad">
+          <span class="estado {% if cliente[6] == 'Activo' %}verde{% else %}gris{% endif %}">
+            {{ cliente[6] }}
+          </span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+</table>
+
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup-card">
+    <div class="card" style="width: 18rem;">
+      <div class="card-body">
+        <a href="#" class="btn btn-primary" id="closePopupBtn">X</a>
+        <h5 class="card-title">Teléfono</h5>
+        <p class="card-text" id="telefono">AQUI # EL TELEFONO</p>
+        <h5 class="card-title">E-mail</h5>
+        <p class="card-text" id="email">AQUI # EL EMAIL</p>
+      </div>
+    </div>
+  </div>
 </div>
 
+<section class="pagination">
+  {% if current_page > 1 %}
+    <a href="{{ url_for('contacts', page=current_page - 1, order_by=request.args.get('order_by', 'nombre_completo')) }}"><</a>
+  {% endif %}
+
+  {% for page in range(1, total_pages + 1) %}
+    <a href="{{ url_for('contacts', page=page, order_by=request.args.get('order_by', 'nombre_completo')) }}" 
+       class="{% if page == current_page %}active{% endif %}">
+      {{ page }}
+    </a>
+  {% endfor %}
+
+  {% if current_page < total_pages %}
+    <a href="{{ url_for('contacts', page=current_page + 1, order_by=request.args.get('order_by', 'nombre_completo')) }}">></a>
+  {% endif %}
+</section>
+
+
+</div>
+</div>
+</div>
+<script src="{{ url_for('static', filename='carta-pop.js') }}"></script>
 {% include 'footer.html' %}
