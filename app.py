@@ -10,29 +10,31 @@ def home():
     message = "Elige una herramienta"
     return render_template('index.html', message=message)
 
-@app.route('/contacts', defaults={'page': 1, 'order_by': 'nombre_completo'})
-@app.route('/contacts/page/<int:page>/<order_by>')
-def contacts(page, order_by):
+@app.route('/contacts', defaults={'page': 1, 'order_by': 'nombre_completo', 'order_direction': 'asc'})
+@app.route('/contacts/page/<int:page>/<order_by>/<order_direction>')
+def contacts(page, order_by, order_direction):
     per_page = 10  # Número de registros por página
     offset = (page - 1) * per_page  # Calcular el desplazamiento
 
-    # Obtener los clientes con paginación y orden por el campo que se pase
-    clientes = get_records('clientes', order_by=order_by, limit=per_page, offset=offset)
+    # Obtener los clientes con paginación y orden dinámico
+    clientes = get_records('clientes', order_by=order_by, order_direction=order_direction, limit=per_page, offset=offset)
 
     # Obtener el número total de registros para calcular el número de páginas
     total_records = get_total_records('clientes')
     total_pages = (total_records + per_page - 1) // per_page  # Redondeo hacia arriba
 
+    print(f"order_by: {order_by}, order_direction: {order_direction}")
     # Pasar los datos y las variables necesarias al template
     return render_template(
         "contacts.html",
         clientes=clientes,
         current_page=page,
         total_pages=total_pages,
-        message="Clientes"
+        message="Clientes",
+        order_by=order_by,
+        order_direction=order_direction
     )
-
-
+    
 @app.route('/tickets')
 def tickets():
     message = "Tickets"

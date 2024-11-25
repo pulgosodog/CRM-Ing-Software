@@ -226,15 +226,19 @@ def get_total_records(table_name):
     conn.close()
     return total_records
 
-def get_records(table_name, order_by='nombre_completo', limit=10, offset=0):
+def get_records(table_name, order_by, order_direction='asc', limit=10, offset=0):
     """
     Obtiene los registros de una tabla específica y los ordena por el campo `order_by`.
     """
     conn = conectar()
     cursor = conn.cursor()
 
-    # Usar un parámetro dinámico para evitar inyecciones SQL
-    query = f"SELECT * FROM {table_name} ORDER BY {order_by} LIMIT ? OFFSET ?"
+    # Validar entrada para evitar inyección SQL
+    if order_direction not in ['asc', 'desc']:
+        order_direction = 'asc'
+
+    # Usar parámetros dinámicos y construir la consulta
+    query = f"SELECT * FROM {table_name} ORDER BY {order_by} {order_direction} LIMIT ? OFFSET ?"
     cursor.execute(query, (limit, offset))
     records = cursor.fetchall()
     

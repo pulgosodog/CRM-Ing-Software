@@ -1,124 +1,88 @@
 {% include 'header.html' %}
 <div id="contacts-tools">
-<div id="groud-select">
+  <div id="groud-select">
     <h2>Compañia</h2>
     <h3><u>Hispano Legal Partners</u></h3>
     <h3>LexLatina Abogados</h3>
     <h3>Justicia & Asociados</h3>
   </div>
   <div class="dashboard-content">
-<!-- <table>
-    <caption>{{ message }}</caption>
-    <thead>
-      <tr>
-        <th scope="col">Nombre Completo</th>
-        <th scope="col">ID</td>
-        <th scope="col"><span>Fecha de nacimiento<img class="filter" src="{{ url_for('static', filename='arrow-grey.png') }}" alt=""></span></th> 
-        <th scope="col">Contactos</th>
-        <th scope="col">Casos</th>
-        <th scope="col"><span>Actividad<img class="filter" src="{{ url_for('static', filename='arrow-grey.png') }}" alt=""></span></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td data-label="Nombre Completo">Paolo Vias Tenorio</td>
-        <td data-label="Due Date">045-300199-0005J</td>
-        <td data-label="Due Date">Marzo 15, 1995</td>
-        <td data-label="Amount"><a href="">Ver</a></td>
-        <td data-label="Amount"><a href="">Ver</a></td>
-        <td data-label="Period"><span class="estado rojo">Inactivo</span></td>
-      </tr>
-      <tr>
-        <td scope="row" data-label="Account">Sophia Bennett Carter</td>
-        <td data-label="Due Date">001-230495-0003U</td>
-        <td data-label="Due Date">Julio 8, 1987</td>
-        <td data-label="Amount"><a href="">Ver</a></td>
-        <td data-label="Amount"><a href="">Ver</a></td>
-        <td data-label="Period"><span class="estado verde">Activo</span></td>
-      </tr>
-      <tr>
-        <td scope="row" data-label="Account">Ethan Alexander Torres</td>
-        <td data-label="Due Date">045-300199-0005J</td>
-        <td data-label="Due Date">Noviembre 22, 2003</td>
-        <td data-label="Amount"><a href="">Ver</a></td>
-        <td data-label="Amount"><a href="">Ver</a></td>
-        <td data-label="Period"><span class="estado verde">Activo</span></td>
-      </tr>
-      <tr>
-        <td scope="row" data-label="Acount">Isabella Grace Thompson</td>
-        <td data-label="Due Date">019-150387-0002L</td>
-        <td data-label="Due Date">Enero 30, 1990</td>
-        <td data-label="Amount"><a href="">Ver</a></td>
-        <td data-label="Amount"><a href="">Ver</a></td>
-        <td data-label="Period"><span class="estado rojo">Inactivo</span></td>
-      </tr>
-    </tbody>
-  </table> -->
+    <table>
+      <caption>{{ message }}</caption>
+      <thead>
+        <tr>
+          <th scope="col">
+            <span>Nombre Completo
+              <a href="/contacts/page/{{ current_page }}/nombre_completo/{{ 'desc' if order_direction == 'asc' else 'asc' }}">
+                <img class="filter" src="{{ url_for('static', filename='arrow-grey-top.png') if order_direction == 'asc' else url_for('static', filename='arrow-grey.png') }}" alt="Orden">
+              </a>
+            </span>
 
-  <table>
-    <caption>{{ message }}</caption>
-    <thead>
-      <tr>
-        <th scope="col">Nombre Completo</th>
-        <th scope="col">ID</th>
-        <th scope="col"><span>Fecha de nacimiento<img class="filter" src="{{ url_for('static', filename='arrow-grey.png') }}" alt=""></span></th> 
-        <th scope="col">Contactos</th>
-        <th scope="col">Casos</th>
-        <th scope="col"><span>Actividad<img class="filter" src="{{ url_for('static', filename='arrow-grey.png') }}" alt=""></span></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for cliente in clientes %}
-      <tr>
-        <td data-label="Nombre Completo">{{ cliente[1] }}</td>
-        <td data-label="ID">{{ cliente[0] }}</td>
-        <td data-label="Fecha de nacimiento">{{ cliente[5] }}</td>
-        <td data-label="Contactos"><button class="verBtn" data-nombre="{{ cliente[1] }}" data-telefono="{{ cliente[2] }}" data-email="{{ cliente[3] }}">Ver</button></td>
-        <td data-label="Casos"><a href="/casos/{{ cliente[1] }}">Ver</a></td>
-        <td data-label="Actividad">
-          <span class="estado {% if cliente[6] == 'Activo' %}verde{% else %}gris{% endif %}">
-            {{ cliente[6] }}
-          </span>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-</table>
+          </th>
+          <th scope="col">ID</th>
+          <th scope="col"><span>Fecha de nacimiento<img class="filter"
+                src="{{ url_for('static', filename='arrow-grey.png') }}" alt=""></span></th>
+          <th scope="col">Contactos</th>
+          <th scope="col">Casos</th>
+          <th scope="col"><span>Actividad <a href="/contacts/page/{{ current_page }}/estado_actividad/{{ 'desc' if order_by == 'estado_actividad' and order_direction == 'asc' else 'asc' }}">
+            <img class="filter" src="{{ url_for('static', filename='arrow-grey-top.png') if order_direction == 'asc' else url_for('static', filename='arrow-grey.png') }}" alt="Ordenar por Estado Actividad">
+          </a></span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cliente in clientes %}
+        <tr>
+          <td data-label="Nombre Completo">{{ cliente[1] }}</td>
+          <td data-label="ID">{{ cliente[0] }}</td>
+          <td data-label="Fecha de nacimiento">{{ cliente[5] }}</td>
+          <td data-label="Contactos"><button class="verBtn" data-nombre="{{ cliente[1] }}"
+              data-telefono="{{ cliente[2] }}" data-email="{{ cliente[3] }}">Ver</button></td>
+          <td data-label="Casos"><a href="/casos/{{ cliente[1] }}">Ver</a></td>
+          <td data-label="Actividad">
+            <span class="estado {% if cliente[6] == 'Activo' %}verde{% else %}gris{% endif %}">
+              {{ cliente[6] }}
+            </span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
 
-<div class="popup-overlay" id="popupOverlay">
-  <div class="popup-card">
-    <div class="card" style="width: 18rem;">
-      <div class="card-body">
-        <a href="#" class="btn btn-primary" id="closePopupBtn">X</a>
-        <h5 class="card-title">Teléfono</h5>
-        <p class="card-text" id="telefono">AQUI # EL TELEFONO</p>
-        <h5 class="card-title">E-mail</h5>
-        <p class="card-text" id="email">AQUI # EL EMAIL</p>
+    <div class="popup-overlay" id="popupOverlay">
+      <div class="popup-card">
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <a href="#" class="btn btn-primary" id="closePopupBtn">X</a>
+            <h5 class="card-title">Teléfono</h5>
+            <p class="card-text" id="telefono">AQUI # EL TELEFONO</p>
+            <h5 class="card-title">E-mail</h5>
+            <p class="card-text" id="email">AQUI # EL EMAIL</p>
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- Sección de Paginación -->
+    <section class="pagination">
+      {% if current_page > 1 %}
+      <a
+        href="{{ url_for('contacts', page=current_page - 1, order_by=request.args.get('order_by', 'nombre_completo'), order_direction=request.args.get('order_direction', 'asc')) }}">&lt;&lt;</a>
+      {% endif %}
+
+      {% for page in range(1, total_pages + 1) %}
+      <a href="{{ url_for('contacts', page=page, order_by=request.args.get('order_by', 'nombre_completo'), order_direction=request.args.get('order_direction', 'asc')) }}"
+        class="{% if page == current_page %}active{% endif %}">
+        {{ page }}
+      </a>
+      {% endfor %}
+
+      {% if current_page < total_pages %} <a
+        href="{{ url_for('contacts', page=current_page + 1, order_by=request.args.get('order_by', 'nombre_completo'), order_direction=request.args.get('order_direction', 'asc')) }}">
+        &gt;&gt;</a>
+        {% endif %}
+    </section>
   </div>
 </div>
 
-<section class="pagination">
-  {% if current_page > 1 %}
-    <a href="{{ url_for('contacts', page=current_page - 1, order_by=request.args.get('order_by', 'nombre_completo')) }}"><</a>
-  {% endif %}
-
-  {% for page in range(1, total_pages + 1) %}
-    <a href="{{ url_for('contacts', page=page, order_by=request.args.get('order_by', 'nombre_completo')) }}" 
-       class="{% if page == current_page %}active{% endif %}">
-      {{ page }}
-    </a>
-  {% endfor %}
-
-  {% if current_page < total_pages %}
-    <a href="{{ url_for('contacts', page=current_page + 1, order_by=request.args.get('order_by', 'nombre_completo')) }}">></a>
-  {% endif %}
-</section>
-
-
-</div>
-</div>
-</div>
 <script src="{{ url_for('static', filename='carta-pop.js') }}"></script>
 {% include 'footer.html' %}
