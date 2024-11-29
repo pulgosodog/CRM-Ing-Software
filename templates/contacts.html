@@ -1,31 +1,38 @@
 {% include 'header.html' %}
 <div id="contacts-tools">
-  <div id="groud-select">
-    <h2>Compañia</h2>
-    <h3><u>Hispano Legal Partners</u></h3>
-    <h3>LexLatina Abogados</h3>
-    <h3>Justicia & Asociados</h3>
-  </div>
   <div class="dashboard-content">
+    <div class="table-top">
+      <button class="button-add" onclick="openModal()">
+      <img src="{{ url_for('static', filename='add-white.png') }}" alt="Add">
+      Agregar
+    </button><h3>{{ message }}</h3></div>
     <table>
-      <caption>{{ message }}</caption>
       <thead>
         <tr>
           <th scope="col">
             <span>Nombre Completo
               <a href="/contacts/page/{{ current_page }}/nombre_completo/{{ 'desc' if order_direction == 'asc' else 'asc' }}">
-                <img class="filter" src="{{ url_for('static', filename='arrow-grey-top.png') if order_direction == 'asc' else url_for('static', filename='arrow-grey.png') }}" alt="Orden">
+                <img class="filter" src="{{ url_for('static', filename='up.png') if order_direction == 'asc' and order_by == 'nombre_completo' else (url_for('static', filename='down.png') if order_direction == 'desc' and order_by == 'nombre_completo' else url_for('static', filename='arrow-grey.png')) }}
+                " alt="Orden">
               </a>
             </span>
 
           </th>
-          <th scope="col">ID</th>
-          <th scope="col"><span>Fecha de nacimiento<img class="filter"
-                src="{{ url_for('static', filename='arrow-grey.png') }}" alt=""></span></th>
+          <th scope="col"><span>ID <a href="/contacts/page/{{ current_page }}/id/{{ 'desc' if order_by == 'id' and order_direction == 'asc' else 'asc' }}">
+            <img class="filter" src="{{ url_for('static', filename='up.png') if order_direction == 'asc' and order_by == 'id' else (url_for('static', filename='down.png') if order_direction == 'desc' and order_by == 'id' else url_for('static', filename='arrow-grey.png')) }}
+            " alt="Ordenar por Estado Actividad">
+          </a></span></th>
+          <th scope="col">
+            <span>Fecha de Nacimiento <a href="/contacts/page/{{ current_page }}/fecha_nacimiento/{{ 'desc' if order_by == 'fecha_nacimiento' and order_direction == 'asc' else 'asc' }}">
+              <img class="filter" src="{{ url_for('static', filename='up.png') if order_direction == 'asc' and order_by == 'fecha_nacimiento' else (url_for('static', filename='down.png') if order_direction == 'desc' and order_by == 'fecha_nacimiento' else url_for('static', filename='arrow-grey.png')) }}
+              " alt="Ordenar por Estado Actividad">
+            </a></span>
+          </th>
           <th scope="col">Contactos</th>
           <th scope="col">Casos</th>
           <th scope="col"><span>Actividad <a href="/contacts/page/{{ current_page }}/estado_actividad/{{ 'desc' if order_by == 'estado_actividad' and order_direction == 'asc' else 'asc' }}">
-            <img class="filter" src="{{ url_for('static', filename='arrow-grey-top.png') if order_direction == 'asc' else url_for('static', filename='arrow-grey.png') }}" alt="Ordenar por Estado Actividad">
+            <img class="filter" src="{{ url_for('static', filename='up.png') if order_direction == 'asc' and order_by == 'estado_actividad' else (url_for('static', filename='down.png') if order_direction == 'desc' and order_by == 'estado_actividad' else url_for('static', filename='arrow-grey.png')) }}
+            " alt="Ordenar por Estado Actividad">
           </a></span></th>
         </tr>
       </thead>
@@ -56,33 +63,62 @@
             <h5 class="card-title">Teléfono</h5>
             <p class="card-text" id="telefono">AQUI # EL TELEFONO</p>
             <h5 class="card-title">E-mail</h5>
-            <p class="card-text" id="email">AQUI # EL EMAIL</p>
+            <a id="email" class="card-text" href="mailto:someone@example.com">Send Email</a>
           </div>
         </div>
       </div>
     </div>
+<!-- Modal (pop-up) -->
+<div id="addClientModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h2>Agregar Cliente</h2>
+    <form action="/add-client" method="POST" enctype="application/x-www-form-urlencoded" id="addClientForm">
+      <label for="nombre_completo">Nombre Completo:</label>
+      <input type="text" id="nombre_completo" name="nombre_completo" required>
+
+      <label for="telefono">Teléfono:</label>
+      <input type="text" id="telefono" name="telefono" required>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="preferencias">Preferencias:</label>
+      <select id="preferencias" name="preferencias" required>
+        <option value="Llamadas">Llamadas</option>
+        <option value="Correo">Correo</option>
+      </select>
+
+      <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+      <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
+
+      <label for="notas">Notas:</label>
+      <textarea id="notas" name="notas" rows="3"></textarea>
+
+      <button type="submit">Guardar</button>
+    </form>
+  </div>
+</div>
 
     <!-- Sección de Paginación -->
     <section class="pagination">
       {% if current_page > 1 %}
-      <a
-        href="{{ url_for('contacts', page=current_page - 1, order_by=request.args.get('order_by', 'nombre_completo'), order_direction=request.args.get('order_direction', 'asc')) }}">&lt;&lt;</a>
+        <a href="/contacts/page/{{ current_page - 1 }}/{{ order_by }}/{{ order_direction }}"><<</a>
       {% endif %}
-
+    
       {% for page in range(1, total_pages + 1) %}
-      <a href="{{ url_for('contacts', page=page, order_by=request.args.get('order_by', 'nombre_completo'), order_direction=request.args.get('order_direction', 'asc')) }}"
-        class="{% if page == current_page %}active{% endif %}">
-        {{ page }}
-      </a>
+        <a href="/contacts/page/{{ page }}/{{ order_by }}/{{ order_direction }}" class="{% if page == current_page %}active{% endif %}">
+          {{ page }}
+        </a>
       {% endfor %}
-
-      {% if current_page < total_pages %} <a
-        href="{{ url_for('contacts', page=current_page + 1, order_by=request.args.get('order_by', 'nombre_completo'), order_direction=request.args.get('order_direction', 'asc')) }}">
-        &gt;&gt;</a>
-        {% endif %}
+    
+      {% if current_page < total_pages %}
+        <a href="/contacts/page/{{ current_page + 1 }}/{{ order_by }}/{{ order_direction }}">>></a>
+      {% endif %}
     </section>
+    
   </div>
 </div>
-
+<script src="{{ url_for('static', filename='pop-up-add-cliente.js') }}"></script>
 <script src="{{ url_for('static', filename='carta-pop.js') }}"></script>
 {% include 'footer.html' %}

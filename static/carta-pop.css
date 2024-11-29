@@ -30,7 +30,7 @@
   }
   
   /* Botón de cierre */
-  .card-body a {
+  #closePopupBtn {
     background-color: red;
     border: none;
     color: white;

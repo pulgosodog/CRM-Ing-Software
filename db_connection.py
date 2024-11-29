@@ -1,4 +1,6 @@
 import sqlite3
+import random
+from datetime import datetime, timedelta
 
 def conectar():
     """
@@ -122,6 +124,33 @@ def fetch_and_display_clientes(db_path="crm_law_firm.db"):
         if connection:
             connection.close()
 
+def insertar_cliente(nombre_completo, telefono, email, preferencias, fecha_nacimiento, notas):
+    """
+    Inserta un cliente en la base de datos.
+    """
+    print("Intentando conectar a la base de datos...")  # Depuración
+    conexion = conectar()
+    if not conexion:
+        print("No se pudo conectar a la base de datos.")  # Depuración
+        return False
+
+    try:
+        print("Conexión exitosa. Intentando insertar cliente...")  # Depuración
+        cursor = conexion.cursor()
+        cursor.execute("""
+            INSERT INTO clientes (nombre_completo, telefono, email, preferencias, fecha_nacimiento, notas)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (nombre_completo, telefono, email, preferencias, fecha_nacimiento, notas))
+        conexion.commit()
+        print("Cliente agregado exitosamente.")  # Depuración
+        return True
+    except sqlite3.IntegrityError as e:
+        print(f"Error al agregar cliente: {e}")  # Depuración
+        return False
+    finally:
+        cerrar_conexion(conexion)
+
+
 
 def create_abogados_table(db_path="crm_law_firm.db"):
     conn = conectar()  # Usar la función que conecta a la base de datos
@@ -213,6 +242,227 @@ def fetch_and_display_abogados(db_path="crm_law_firm.db"):
             connection.close()
 
 
+def create_asistentes_table(db_path="crm_law_firm.db"):
+    """
+    Crea la tabla 'asistentes' si no existe.
+    """
+    conn = sqlite3.connect(db_path)  # Usar la función que conecta a la base de datos
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS asistentes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,  -- Identificador único del asistente
+            nombre_completo TEXT NOT NULL,          -- Nombre completo del asistente
+            correo TEXT,                            -- Correo electrónico del asistente
+            cargo TEXT,                             -- Cargo del asistente (todas comparten el mismo cargo por ahora)
+            notas TEXT,                             -- Notas adicionales sobre el asistente
+            estado_actividad BOOLEAN DEFAULT 1      -- Estado de actividad (1 = activo, 0 = inactivo)
+        )
+    """)
+    conn.commit()  # Guardar los cambios en la base de datos
+    conn.close()   # Cerrar la conexión con la base de datos
+
+def insert_sample_asistentes_data(db_path="crm_law_firm.db"):
+    """
+    Inserta datos de ejemplo en la tabla 'asistentes'.
+    Args:
+        db_path (str): Ruta del archivo de la base de datos SQLite.
+    """
+    
+    sample_data = [
+        ('Juan Pérez', 'juan.perez@example.com', 'Asistente', 'Notas sobre Juan', 1),
+        ('Ana Gómez', 'ana.gomez@example.com', 'Asistente', 'Notas sobre Ana', 1),
+        ('Luis Rodríguez', 'luis.rodriguez@example.com', 'Asistente', 'Notas sobre Luis', 1),
+        ('María López', 'maria.lopez@example.com', 'Asistente', 'Notas sobre María', 0),
+        ('Carlos Martín', 'carlos.martin@example.com', 'Asistente', 'Notas sobre Carlos', 1),
+        ('Lucía Fernández', 'lucia.fernandez@example.com', 'Asistente', 'Notas sobre Lucía', 1),
+        ('Pedro García', 'pedro.garcia@example.com', 'Asistente', 'Notas sobre Pedro', 0),
+        ('Sofía Torres', 'sofia.torres@example.com', 'Asistente', 'Notas sobre Sofía', 1),
+        ('Diego Sánchez', 'diego.sanchez@example.com', 'Asistente', 'Notas sobre Diego', 1),
+        ('Laura Díaz', 'laura.diaz@example.com', 'Asistente', 'Notas sobre Laura', 0),
+        ('Felipe Romero', 'felipe.romero@example.com', 'Asistente', 'Notas sobre Felipe', 1),
+        ('Elena Ruiz', 'elena.ruiz@example.com', 'Asistente', 'Notas sobre Elena', 0)
+    ]
+    
+    try:
+        # Conexión a la base de datos
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+
+        # Insertar datos
+        cursor.executemany("""
+        INSERT INTO asistentes (nombre_completo, correo, cargo, notas, estado_actividad)
+        VALUES (?, ?, ?, ?, ?);
+        """, sample_data)
+
+        # Confirmar cambios
+        conn.commit()
+        print("Datos insertados con éxito en la tabla 'asistentes'.")
+
+    except sqlite3.Error as e:
+        print(f"Error al insertar datos: {e}")
+
+    finally:
+        # Cerrar la conexión
+        if conn:
+            conn.close()
+
+
+def create_casos_table(db_path="crm_law_firm.db"):
+    conn = conectar()  # Usar la función que conecta a la base de datos
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    CREATE TABLE casos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_cliente INTEGER NOT NULL,
+    nombre_caso TEXT NOT NULL,
+    tipo_caso TEXT NOT NULL,
+    estado BOOLEAN NOT NULL DEFAULT 1, -- 1: Abierto, 0: Cerrado
+    prioridad INTEGER NOT NULL DEFAULT 2, -- 1: Alta, 2: Media, 3: Baja
+    id_abogado INTEGER,
+    id_asistente INTEGER,
+    fecha_creacion TEXT NOT NULL,
+    fecha_deadline TEXT NOT NULL,
+    id_documentos INTEGER,
+    FOREIGN KEY (id_cliente) REFERENCES clientes (id),
+    FOREIGN KEY (id_abogado) REFERENCES abogados (id),
+    FOREIGN KEY (id_asistente) REFERENCES asistentes (id)
+    ) 
+    """)
+    conn.commit()  # Guardar los cambios
+    conn.close()  # Cerrar la conexión
+
+def insert_sample_casos_data(db_path="crm_law_firm.db"):
+    """
+    Inserta datos de ejemplo en la tabla 'casos' con prioridad como número.
+    """
+    casos_data = []
+    tipos_caso = ['Civil', 'Penal', 'Laboral', 'Familiar', 'Mercantil', 'Comercial']
+    
+    # Prioridad ahora es un número: 1 (Alta), 2 (Media), 3 (Baja)
+    prioridades = [1, 2, 3]
+    today = datetime.today()
+
+    for _ in range(20):  # Crear 20 casos
+        id_cliente = random.randint(1, 20)
+        id_abogado = random.randint(1, 12)
+        id_asistente = random.randint(1, 12)
+        nombre_caso = f"Caso de {random.choice(tipos_caso)} {random.randint(1000, 9999)}"
+        tipo_caso = random.choice(tipos_caso)
+        estado = random.choice([0, 1])
+        prioridad = random.choice(prioridades)
+        fecha_creacion = today.strftime('%Y-%m-%d %H:%M:%S')
+        fecha_deadline = (today + timedelta(days=30)).strftime('%Y-%m-%d %H:%M:%S')
+
+        casos_data.append((
+            id_cliente, nombre_caso, tipo_caso, estado, prioridad, 
+            id_abogado, id_asistente, fecha_creacion, fecha_deadline, None
+        ))
+
+    try:
+        connection = sqlite3.connect(db_path)
+        cursor = connection.cursor()
+
+        cursor.executemany("""
+        INSERT INTO casos (id_cliente, nombre_caso, tipo_caso, estado, prioridad, 
+                           id_abogado, id_asistente, fecha_creacion, fecha_deadline, id_documentos)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        """, casos_data)
+
+        connection.commit()
+        print("Datos insertados con éxito en la tabla 'casos'.")
+    except sqlite3.Error as e:
+        print(f"Error al insertar datos en 'casos': {e}")
+    finally:
+        if connection:
+            connection.close()            
+
+
+def create_tickets_table(db_path="crm_law_firm.db"):
+    """
+    Crea la tabla 'tickets' si no existe.
+    """
+    try:
+        connection = sqlite3.connect(db_path)
+        cursor = connection.cursor()
+
+        # Crear la tabla 'tickets'
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS tickets (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            asistente_id INTEGER,
+            caso_id INTEGER,
+            estado TEXT CHECK(estado IN ('abierto', 'cerrado')),
+            nota TEXT,
+            fecha_creacion TEXT,
+            fecha_cierre TEXT,
+            FOREIGN KEY (asistente_id) REFERENCES asistentes(id),
+            FOREIGN KEY (caso_id) REFERENCES casos(id)
+        );
+        """)
+        
+        connection.commit()
+        print("Tabla 'tickets' creada exitosamente.")
+
+    except sqlite3.Error as e:
+        print(f"Error al crear la tabla 'tickets': {e}")
+    finally:
+        if connection:
+            connection.close()
+
+def insert_sample_tickets_data(db_path="crm_law_firm.db"):
+    """
+    Inserta 30 filas de datos de ejemplo en la tabla 'tickets'.
+    """
+    estados = ['abierto', 'cerrado']
+    notas = [
+        "Revisar documentos pendientes.",
+        "Preparar evidencia para el caso.",
+        "Enviar notificación al cliente.",
+        "Revisar plazos de entrega.",
+        "Coordinar reunión con abogado.",
+        "Verificar avances del caso.",
+        "Registrar datos adicionales.",
+        "Resolver discrepancias en documentos.",
+        "Actualizar estado del caso.",
+        "Revisar informes semanales."
+    ]
+
+    # Generar datos aleatorios para 30 tickets
+    tickets_data = []
+    today = datetime.today()
+
+    for _ in range(30):
+        asistente_id = random.randint(1, 12)  # ID del asistente entre 1 y 12
+        caso_id = random.randint(1, 20)       # ID del caso entre 1 y 20
+        estado = random.choice(estados)
+        nota = random.choice(notas)
+        fecha_creacion = today.strftime('%Y-%m-%d %H:%M:%S')
+        fecha_cierre = (
+            (today + timedelta(days=random.randint(1, 30))).strftime('%Y-%m-%d %H:%M:%S') 
+            if estado == 'cerrado' else None
+        )
+        tickets_data.append((asistente_id, caso_id, estado, nota, fecha_creacion, fecha_cierre))
+
+    try:
+        connection = sqlite3.connect(db_path)
+        cursor = connection.cursor()
+
+        # Insertar datos en la tabla 'tickets'
+        cursor.executemany("""
+        INSERT INTO tickets (asistente_id, caso_id, estado, nota, fecha_creacion, fecha_cierre)
+        VALUES (?, ?, ?, ?, ?, ?);
+        """, tickets_data)
+        
+        connection.commit()
+        print("Datos insertados exitosamente en la tabla 'tickets'.")
+
+    except sqlite3.Error as e:
+        print(f"Error al insertar datos en 'tickets': {e}")
+    finally:
+        if connection:
+            connection.close()
+
 
 def get_total_records(table_name):
     conn = conectar()
@@ -244,9 +494,3 @@ def get_records(table_name, order_by, order_direction='asc', limit=10, offset=0)
     
     conn.close()
     return records
-
-
-# conectar()
-# create_abogados_table()
-# insert_sample_abogados_data()
-# fetch_and_display_abogados()
