@@ -95,35 +95,6 @@ def insert_sample_clientes_data(db_path="crm_law_firm.db"):
         if connection:
             connection.close()
 
-def fetch_and_display_clientes(db_path="crm_law_firm.db"):
-    """
-    Fetches and displays all data from the 'clientes' table.
-    Args:
-        db_path (str): Path to the SQLite database file.
-    """
-    try:
-        # Conexión a la base de datos
-        connection = sqlite3.connect(db_path)
-        cursor = connection.cursor()
-
-        # Recuperar datos de la tabla 'clientes'
-        cursor.execute("SELECT * FROM clientes;")
-        rows = cursor.fetchall()
-
-        # Mostrar los datos en formato tabular
-        print(f"{'ID':<5} {'Nombre Completo':<25} {'Teléfono':<15} {'Email':<30} {'Preferencias':<15} {'Nacimiento':<12} {'Estado':<10} {'Notas':<30}")
-        print("=" * 140)
-        for row in rows:
-            print(f"{row[0]:<5} {row[1]:<25} {row[2]:<15} {row[3]:<30} {row[4]:<15} {row[5]:<12} {row[6]:<10} {row[7]:<30}")
-
-    except sqlite3.Error as e:
-        print(f"Error al recuperar datos: {e}")
-
-    finally:
-        # Cerrar la conexión
-        if connection:
-            connection.close()
-
 def insertar_cliente(nombre_completo, telefono, email, preferencias, fecha_nacimiento, notas):
     """
     Inserta un cliente en la base de datos.
@@ -206,35 +177,6 @@ def insert_sample_abogados_data(db_path="crm_law_firm.db"):
 
     except sqlite3.Error as e:
         print(f"Error al insertar datos: {e}")
-
-    finally:
-        # Cerrar la conexión
-        if connection:
-            connection.close()
-
-def fetch_and_display_abogados(db_path="crm_law_firm.db"):
-    """
-    Fetches and displays all data from the 'abogados' table.
-    Args:
-        db_path (str): Path to the SQLite database file.
-    """
-    try:
-        # Conexión a la base de datos
-        connection = sqlite3.connect(db_path)
-        cursor = connection.cursor()
-
-        # Recuperar datos de la tabla 'abogados'
-        cursor.execute("SELECT * FROM abogados;")
-        rows = cursor.fetchall()
-
-        # Mostrar los datos en formato tabular
-        print(f"{'ID':<5} {'Nombre Completo':<25} {'Correo':<30} {'Especialidad':<20} {'Notas':<50}")
-        print("=" * 140)
-        for row in rows:
-            print(f"{row[0]:<5} {row[1]:<25} {row[2]:<30} {row[3]:<20} {row[4]:<50}")
-
-    except sqlite3.Error as e:
-        print(f"Error al recuperar datos: {e}")
 
     finally:
         # Cerrar la conexión
@@ -377,32 +319,61 @@ def insert_sample_casos_data(db_path="crm_law_firm.db"):
         if connection:
             connection.close()            
 
+def get_join_case_records():
+    """
+    Obtiene los registros de la tabla casos con los datos de clientes y abogados usando JOINs
+    """
+    conn = conectar()  # Conectarse a la base de datos
+    cursor = conn.cursor()
+
+    # Construir la consulta sin ORDER BY, LIMIT ni OFFSET
+    query = """
+    SELECT casos.id, casos.nombre_caso, casos.tipo_caso, casos.estado, casos.prioridad, 
+           clientes.nombre_completo AS cliente_nombre, 
+           abogados.nombre_completo AS abogado_nombre, casos.fecha_creacion, casos.fecha_deadline
+    FROM casos
+    LEFT JOIN clientes ON casos.id_cliente = clientes.id
+    LEFT JOIN abogados ON casos.id_abogado = abogados.id
+    """
+    
+    # Ejecutar la consulta
+    cursor.execute(query)
+    records = cursor.fetchall()  # Obtener todos los registros
+
+    conn.close()  # Cerrar la conexión
+    return records  # Retornar los resultados
+
 
 def create_tickets_table(db_path="crm_law_firm.db"):
     """
-    Crea la tabla 'tickets' si no existe.
+    Crea la tabla 'tickets' con los nuevos cambios.
     """
     try:
         connection = sqlite3.connect(db_path)
         cursor = connection.cursor()
 
-        # Crear la tabla 'tickets'
+        # Eliminar la tabla si existe
+        cursor.execute("DROP TABLE IF EXISTS tickets;")
+        
+        # Crear la tabla 'tickets' con los cambios
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS tickets (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             asistente_id INTEGER,
             caso_id INTEGER,
-            estado TEXT CHECK(estado IN ('abierto', 'cerrado')),
-            nota TEXT,
+            estado BOOLEAN NOT NULL DEFAULT 1, -- 1 para abierto, 0 para cerrado
+            tarea VARCHAR(50),
+            descripcion VARCHAR(200),
+            nota TEXT CHECK(LENGTH(nota) <= 300), -- Limitar las notas a 300 caracteres
             fecha_creacion TEXT,
             fecha_cierre TEXT,
             FOREIGN KEY (asistente_id) REFERENCES asistentes(id),
             FOREIGN KEY (caso_id) REFERENCES casos(id)
         );
         """)
-        
+
         connection.commit()
-        print("Tabla 'tickets' creada exitosamente.")
+        print("Tabla 'tickets' actualizada exitosamente.")
 
     except sqlite3.Error as e:
         print(f"Error al crear la tabla 'tickets': {e}")
@@ -412,37 +383,52 @@ def create_tickets_table(db_path="crm_law_firm.db"):
 
 def insert_sample_tickets_data(db_path="crm_law_firm.db"):
     """
-    Inserta 30 filas de datos de ejemplo en la tabla 'tickets'.
+    Inserta 30 filas de datos de ejemplo en la tabla 'tickets' considerando los nuevos cambios.
     """
-    estados = ['abierto', 'cerrado']
-    notas = [
-        "Revisar documentos pendientes.",
-        "Preparar evidencia para el caso.",
-        "Enviar notificación al cliente.",
-        "Revisar plazos de entrega.",
-        "Coordinar reunión con abogado.",
-        "Verificar avances del caso.",
-        "Registrar datos adicionales.",
-        "Resolver discrepancias en documentos.",
-        "Actualizar estado del caso.",
-        "Revisar informes semanales."
+    tareas = [
+        "Revisar documentos",
+        "Preparar evidencias",
+        "Enviar notificaciones",
+        "Actualizar informes",
+        "Coordinar reuniones",
+        "Registrar datos",
+        "Resolver discrepancias",
+        "Verificar avances",
+        "Analizar plazos",
+        "Asignar recursos"
     ]
 
-    # Generar datos aleatorios para 30 tickets
+    descripciones = [
+        "Pendiente de revisión por el asistente.",
+        "Requiere validación del abogado asignado.",
+        "Urgente: notificación a cliente antes de la fecha límite.",
+        "Avance del caso registrado en el sistema.",
+        "Programar reunión con cliente esta semana.",
+        "Actualización requerida en el estado del caso.",
+        "Revisión de documentos adicionales solicitados.",
+        "Resolver discrepancias encontradas en el archivo.",
+        "Actualizar informes antes del próximo viernes.",
+        "Asignación de recursos completada."
+    ]
+
+    estados = [1, 0]  # 1 para abierto, 0 para cerrado
+
     tickets_data = []
     today = datetime.today()
 
     for _ in range(30):
-        asistente_id = random.randint(1, 12)  # ID del asistente entre 1 y 12
-        caso_id = random.randint(1, 20)       # ID del caso entre 1 y 20
+        asistente_id = random.randint(1, 12)
+        caso_id = random.randint(1, 20)
         estado = random.choice(estados)
-        nota = random.choice(notas)
+        tarea = random.choice(tareas)
+        descripcion = random.choice(descripciones)
+        nota = None  # Mantenemos las notas sin datos
         fecha_creacion = today.strftime('%Y-%m-%d %H:%M:%S')
         fecha_cierre = (
             (today + timedelta(days=random.randint(1, 30))).strftime('%Y-%m-%d %H:%M:%S') 
-            if estado == 'cerrado' else None
+            if estado == 0 else None
         )
-        tickets_data.append((asistente_id, caso_id, estado, nota, fecha_creacion, fecha_cierre))
+        tickets_data.append((asistente_id, caso_id, estado, tarea, descripcion, nota, fecha_creacion, fecha_cierre))
 
     try:
         connection = sqlite3.connect(db_path)
@@ -450,10 +436,10 @@ def insert_sample_tickets_data(db_path="crm_law_firm.db"):
 
         # Insertar datos en la tabla 'tickets'
         cursor.executemany("""
-        INSERT INTO tickets (asistente_id, caso_id, estado, nota, fecha_creacion, fecha_cierre)
-        VALUES (?, ?, ?, ?, ?, ?);
+        INSERT INTO tickets (asistente_id, caso_id, estado, tarea, descripcion, nota, fecha_creacion, fecha_cierre)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?);
         """, tickets_data)
-        
+
         connection.commit()
         print("Datos insertados exitosamente en la tabla 'tickets'.")
 
@@ -494,3 +480,47 @@ def get_records(table_name, order_by, order_direction='asc', limit=10, offset=0)
     
     conn.close()
     return records
+
+def get_cases_join(order_by, order_direction='asc', limit=10, offset=0):
+    conn = conectar()
+    cursor = conn.cursor()
+
+    # Validar entrada para evitar inyección SQL
+    if order_direction not in ['asc', 'desc']:
+        order_direction = 'asc'
+
+    # Asegurarse de que el nombre de la columna sea seguro (puedes validar contra una lista permitida)
+    allowed_columns = [
+        "casos.id", "casos.nombre_caso", "casos.tipo_caso", "casos.estado",
+        "casos.prioridad", "casos.fecha_creacion", "casos.fecha_deadline",
+        "cliente_nombre", "abogado_nombre", "asistente_nombre"
+    ]
+    if order_by not in allowed_columns:
+        order_by = "casos.id"
+
+    # Construir la consulta
+    query = f"""
+    SELECT 
+    casos.id,
+    casos.nombre_caso,
+    casos.tipo_caso,
+    casos.estado,
+    casos.prioridad,
+    casos.fecha_creacion,
+    casos.fecha_deadline,
+    clientes.nombre_completo AS cliente_nombre,
+    abogados.nombre_completo AS abogado_nombre,
+    asistentes.nombre_completo AS asistente_nombre
+    FROM casos
+    INNER JOIN clientes ON casos.id_cliente = clientes.id
+    LEFT JOIN abogados ON casos.id_abogado = abogados.id
+    LEFT JOIN asistentes ON casos.id_asistente = asistentes.id
+    ORDER BY {order_by} {order_direction} LIMIT ? OFFSET ?
+    """
+    cursor.execute(query, (limit, offset))
+    records = cursor.fetchall()
+    conn.close()
+    return records
+
+create_tickets_table()
+insert_sample_tickets_data()

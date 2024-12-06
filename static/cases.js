@@ -13,8 +13,24 @@
                 const cliente = row.dataset.cliente || 'Desconocido';
                 const tipo = row.dataset.tipo || 'Desconocido';
                 const creacion = row.dataset.creacion;
-
-                // Actualizar el contenido de case-details
+                let clase = '';
+                let prioridadTexto = '';
+                switch (prioridad) {
+                    case "1":
+                        clase = "rojo"
+                        prioridadTexto = "Alta";
+                        break;
+                    case "2":
+                        clase = "amarillo"
+                        prioridadTexto = "Media";
+                        break;
+                    case "3":
+                        clase = "verde"
+                        prioridadTexto = "Baja";
+                        break;
+                    default:
+                        break;
+                }
                 caseDetails.innerHTML = `
                     <div>
                         <strong>ID de caso</strong><br>
@@ -42,7 +58,7 @@
                     </div>
                     <div>
                         <strong>Prioridad</strong><br>
-                        <div id="estado-fix"><span class="estado ${prioridad.toLowerCase()}">${prioridad}</span></div>
+                        <div id="estado-fix"><span class="estado ${clase}">${prioridadTexto}</span></div>
                     </div>
                     <div>
                         <strong>Creación</strong><br>

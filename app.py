@@ -1,6 +1,7 @@
 from flask import Flask, render_template, Blueprint, request, redirect, url_for, flash, jsonify
 
-from db_connection import get_total_records, get_records, insertar_cliente
+from db_connection import get_total_records, get_records, insertar_cliente, get_join_case_records, get_cases_join
+
 
 views = Blueprint('views', __name__)
 
@@ -71,14 +72,32 @@ def add_client():
         print(f"Error en la ruta /add-client: {e}")
         return jsonify({'message': 'Error en el servidor'}), 500
 
-
     # Redirige a la página donde se muestran los clientes
     return redirect('/contacts')
 
-@app.route('/tickets')
-def tickets():
-    message = "Tickets"
-    return render_template('tickets.html', message=message)
+@app.route('/tickets', defaults={'page': 1, 'order_by': 'id', 'order_direction': 'asc'})
+@app.route('/tickets/page/<int:page>/<order_by>/<order_direction>')
+def tickets(page, order_by, order_direction):
+    per_page = 10  # Número de registros por página
+    offset = (page - 1) * per_page  # Calcular el desplazamiento
+
+    # Obtener los tickets con paginación y orden dinámico
+    tickets = get_records('tickets', order_by=order_by, order_direction=order_direction, limit=per_page, offset=offset)
+
+    # Obtener el número total de registros para calcular el número de páginas
+    total_records = get_total_records('tickets')
+    total_pages = (total_records + per_page - 1) // per_page  # Redondeo hacia arriba
+
+    # Pasar los datos y las variables necesarias al template
+    return render_template(
+        "tickets.html",
+        tickets=tickets,
+        current_page=page,
+        total_pages=total_pages,
+        message="Tickets",
+        order_by=order_by,
+        order_direction=order_direction
+    )
 
 @app.route('/cases', defaults={'page': 1, 'order_by': 'nombre_caso', 'order_direction': 'asc'})
 @app.route('/cases/page/<int:page>/<order_by>/<order_direction>')
@@ -88,8 +107,7 @@ def cases(page, order_by, order_direction):
     offset = (page - 1) * per_page  # Calcular el desplazamiento para la paginación
 
     # Obtener los casos con paginación y orden dinámico
-    casos = get_records('casos', order_by=order_by, order_direction=order_direction, limit=per_page, offset=offset)
-
+    casos = get_cases_join(order_by=order_by, order_direction=order_direction, limit=per_page, offset=offset)
     # Obtener el número total de registros para calcular el número de páginas
     total_records = get_total_records('casos')
     total_pages = (total_records + per_page - 1) // per_page  # Redondeo hacia arriba
@@ -104,6 +122,8 @@ def cases(page, order_by, order_direction):
         order_by=order_by,
         order_direction=order_direction
     )
+
+
 
 @app.route('/report')
 def report():

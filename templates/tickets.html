@@ -1,67 +1,74 @@
 {% include 'header.html' %}
-<!-- <div id="contacts">
-    <h2>Compañia</h2>
-    <h3><u>Hispano Legal Partners</u></h3>
-    <h3>LexLatina Abogados</h3>
-    <h3>Justicia & Asociados</h3>
-  </div> -->
-  <div id="tickets" class="dashboard-content">
-<table>
-    <caption>{{ message }}</caption>
-    <thead>
-      <tr>
-        <th scope="col"><span>Estado <img class="filter" src="{{ url_for('static', filename='select-all.png') }}" alt=""></span></th>
-        <th scope="col">Tarea</td>
-        <th scope="col">Caso</th> 
-        <th scope="col">Contacto</th>
-        <th scope="col"><span>Fecha Tope<img class="filter" src="{{ url_for('static', filename='arrow-grey.png') }}" alt=""></span></th>
-        <th scope="col"><span>Prioridad<img class="filter" src="{{ url_for('static', filename='arrow-grey.png') }}" alt=""></span></th>
-    </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td data-label="Due Date"><img class="filter" src="{{ url_for('static', filename='check-green.png') }}" alt=""></td>
-        <td data-label="Due Date">Llamar al cliente para informar resolucion de accidente</td>
-        <td data-label="Amount"><a href="">Ver</a></td>
-        <td data-label="Amount"><a href="">Ver</a></td>
-        <td data-label="Due Date">Marzo 15</td>
-        <td data-label="Period"><span class="estado rojo">Alta</span></td>
-      </tr>
-      <tr>
-        <td data-label="Due Date"><img class="filter" src="{{ url_for('static', filename='check-grey.png') }}" alt=""></td>
-        <td data-label="Due Date">Cargos por documentos apostillados</td>
-        <td data-label="Amount"><a href="">Ver</a></td>
-        <td data-label="Amount"><a href="">Ver</a></td>
-        <td data-label="Due Date">Julio 8</td>
-        <td data-label="Period"><span class="estado verde">Baja</span></td>
-      </tr>
-      <tr>
-        <td data-label="Due Date"><img class="filter" src="{{ url_for('static', filename='check-grey.png') }}" alt=""></td>
-        <td data-label="Due Date">Resolucion de divorcio</td>
-        <td data-label="Amount"><a href="">Ver</a></td>
-        <td data-label="Amount"><a href="">Ver</a></td>
-        <td data-label="Due Date">Noviembre 22</td>
-        <td data-label="Period"><span class="estado amarillo">Media</span></td>
-      </tr>
-      <tr>
-        <td data-label="Due Date"><img class="filter" src="{{ url_for('static', filename='check-grey.png') }}" alt=""></td>
-        <td data-label="Due Date">Agendar llamada con el abogado rodriguez</td>
-        <td data-label="Amount"><a href="">Ver</a></td>
-        <td data-label="Amount"><a href="">Ver</a></td>
-        <td data-label="Due Date">Enero 30</td>
-        <td data-label="Period"><span class="estado verde">Baja</span></td>
-      </tr>
-    </tbody>
-  </table>
-  <section class="pagination">
-    <a href="#" class="active">1</a>
-    <a href="#">2</a>
-    <a href="#">3</a>
-    <a href="#">4</a>
-    <a href="#">5</a>
-    <a href="#">Next</a>
-  </section>
-</div>
-</div>
+<div id="tickets-tools">
+  <div class="dashboard-content">
+    <div class="table-top">
+      <h3>{{ message }}</h3>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">
+            <span>Estado
+              <a href="/tickets/page/{{ current_page }}/estado/{{ 'desc' if order_by == 'estado' and order_direction == 'asc' else 'asc' }}">
+                <img class="filter" src="{{ url_for('static', filename='up.png') if order_direction == 'asc' and order_by == 'estado' else (url_for('static', filename='down.png') if order_direction == 'desc' and order_by == 'estado' else url_for('static', filename='arrow-grey.png')) }}" alt="Ordenar">
+              </a>
+            </span>
+          </th>
+          <th scope="col">Tarea</th>
+          <th scope="col">Caso</th>
+          <th scope="col">Contacto</th>
+          <th scope="col">
+            <span>Fecha Tope
+              <a href="/tickets/page/{{ current_page }}/fecha_tope/{{ 'desc' if order_by == 'fecha_tope' and order_direction == 'asc' else 'asc' }}">
+                <img class="filter" src="{{ url_for('static', filename='up.png') if order_direction == 'asc' and order_by == 'fecha_tope' else (url_for('static', filename='down.png') if order_direction == 'desc' and order_by == 'fecha_tope' else url_for('static', filename='arrow-grey.png')) }}" alt="Ordenar">
+              </a>
+            </span>
+          </th>
+          <th scope="col">
+            <span>Prioridad
+              <a href="/tickets/page/{{ current_page }}/prioridad/{{ 'desc' if order_by == 'prioridad' and order_direction == 'asc' else 'asc' }}">
+                <img class="filter" src="{{ url_for('static', filename='up.png') if order_direction == 'asc' and order_by == 'prioridad' else (url_for('static', filename='down.png') if order_direction == 'desc' and order_by == 'prioridad' else url_for('static', filename='arrow-grey.png')) }}" alt="Ordenar">
+              </a>
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ticket in tickets %}
+        <tr>
+          <td data-label="Estado">
+            <img class="filter" src="{{ url_for('static', filename='check-green.png') if ticket['estado'] else url_for('static', filename='check-grey.png') }}" alt="Estado">
+          </td>
+          <td data-label="Tarea">{{ ticket['tarea'] }}</td>
+          <td data-label="Caso"><a href="/casos/{{ ticket['caso_id'] }}">Ver</a></td>
+          <td data-label="Contacto"><a href="/contactos/{{ ticket['contacto_id'] }}">Ver</a></td>
+          <td data-label="Fecha Tope">{{ ticket['fecha_tope'] }}</td>
+          <td data-label="Prioridad">
+            <span class="estado {% if ticket['prioridad'] == 'Alta' %}rojo{% elif ticket['prioridad'] == 'Media' %}amarillo{% else %}verde{% endif %}">
+              {{ ticket['prioridad'] }}
+            </span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
 
+    <!-- Paginación -->
+    <section class="pagination">
+      {% if current_page > 1 %}
+        <a href="/tickets/page/{{ current_page - 1 }}/{{ order_by }}/{{ order_direction }}"><<</a>
+      {% endif %}
+      
+      {% for page in range(1, total_pages + 1) %}
+        <a href="/tickets/page/{{ page }}/{{ order_by }}/{{ order_direction }}" class="{% if page == current_page %}active{% endif %}">
+          {{ page }}
+        </a>
+      {% endfor %}
+      
+      {% if current_page < total_pages %}
+        <a href="/tickets/page/{{ current_page + 1 }}/{{ order_by }}/{{ order_direction }}">>></a>
+      {% endif %}
+    </section>
+  </div>
+</div>
 {% include 'footer.html' %}

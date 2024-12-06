@@ -36,25 +36,25 @@
             </thead>
             <tbody>
                 {% for caso in casos %}
-                <tr class="clickable-case" data-id="{{ caso[0] }}" data-nombre="{{ caso[2] }}"
-                    data-estado="{% if caso[4] == 1 %}Abierto{% else %}Cerrado{% endif %}"
-                    data-prioridad="{{ caso[5] }}" data-abogado="{{ caso[6] }}" data-cliente="{{ caso[7] }}"
-                    data-tipo="{{ caso[3] }}" data-creacion="{{ caso[8] }}">
+                <tr class="clickable-case" data-id="{{ caso[0] }}" data-nombre="{{ caso[1] }}"
+                    data-estado="{% if caso[3] == 1 %}Abierto{% else %}Cerrado{% endif %}"
+                    data-prioridad="{{ caso[4] }}" data-abogado="{{ caso[8] }}" data-cliente="{{ caso[7] }}"
+                    data-tipo="{{ caso[2] }}" data-creacion="{{ caso[5] }}">
                     <td data-label="ID de Caso">#{{ caso[0] }}</td>
-                    <td data-label="Nombre del Caso">{{ caso[2] }}</td>
+                    <td data-label="Nombre del Caso">{{ caso[1] }}</td>
                     <td data-label="Estado">
-                        <span class="estado {% if caso[4] == 1 %}verde{% else %}gris{% endif %}">
-                            {% if caso[4] == 1 %}Abierto{% else %}Cerrado{% endif %}
+                        <span class="estado {% if caso[3] == 1 %}verde{% else %}gris{% endif %}">
+                            {% if caso[3] == 1 %}Abierto{% else %}Cerrado{% endif %}
                         </span>
                     </td>
                     <td data-label="Prioridad">
                         <span
-                            class="estado {% if caso[5] == 1 %}rojo{% elif caso[5] == 2 %}amarillo{% else %}verde{% endif %}">
-                            {% if caso[5] == 1 %}
+                            class="estado {% if caso[4] == 1 %}rojo{% elif caso[4] == 2 %}amarillo{% else %}verde{% endif %}">
+                            {% if caso[4] == 1 %}
                             Alta
-                            {% elif caso[5] == 2 %}
+                            {% elif caso[4] == 2 %}
                             Media
-                            {% elif caso[5] == 3 %}
+                            {% elif caso[4] == 3 %}
                             Baja
                             {% endif %}
                         </span>
