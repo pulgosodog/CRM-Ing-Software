@@ -490,11 +490,11 @@ def get_cases_join(order_by, order_direction='asc', limit=10, offset=0):
     # Validar entrada para evitar inyección SQL
     if order_direction not in ['asc', 'desc']:
         order_direction = 'asc'
-
+    print(order_by)
     # Asegurarse de que el nombre de la columna sea seguro (puedes validar contra una lista permitida)
     allowed_columns = [
-        "casos.id", "casos.nombre_caso", "casos.tipo_caso", "casos.estado",
-        "casos.prioridad", "casos.fecha_creacion", "casos.fecha_deadline",
+        "id", "nombre_caso", "tipo_caso", "estado",
+        "prioridad", "fecha_creacion", "fecha_deadline",
         "cliente_nombre", "abogado_nombre", "asistente_nombre"
     ]
     if order_by not in allowed_columns:
