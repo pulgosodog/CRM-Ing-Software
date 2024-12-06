@@ -9,25 +9,35 @@
         <tr>
           <th scope="col">
             <span>Estado
-              <a href="/tickets/page/{{ current_page }}/estado/{{ 'desc' if order_by == 'estado' and order_direction == 'asc' else 'asc' }}">
-                <img class="filter" src="{{ url_for('static', filename='up.png') if order_direction == 'asc' and order_by == 'estado' else (url_for('static', filename='down.png') if order_direction == 'desc' and order_by == 'estado' else url_for('static', filename='arrow-grey.png')) }}" alt="Ordenar">
+              <a href="/tickets/page/{{ current_page }}/estado/{{ 'desc' if order_direction == 'asc' else 'asc' }}">
+                <img class="filter" src="{{ url_for('static', filename='up.png') if order_direction == 'asc' and order_by == 'estado' else (url_for('static', filename='down.png') if order_direction == 'desc' and order_by == 'estado' else url_for('static', filename='arrow-grey.png')) }}" 
+                alt="Orden">
               </a>
             </span>
           </th>
-          <th scope="col">Tarea</th>
+          <th scope="col">
+            <span>Tarea
+              <a href="/tickets/page/{{ current_page }}/tarea/{{ 'desc' if order_direction == 'asc' else 'asc' }}">
+                <img class="filter" src="{{ url_for('static', filename='up.png') if order_direction == 'asc' and order_by == 'tarea' else (url_for('static', filename='down.png') if order_direction == 'desc' and order_by == 'tarea' else url_for('static', filename='arrow-grey.png')) }}" 
+                alt="Orden">
+              </a>
+            </span>
+          </th>
           <th scope="col">Caso</th>
           <th scope="col">Contacto</th>
           <th scope="col">
             <span>Fecha Tope
-              <a href="/tickets/page/{{ current_page }}/fecha_tope/{{ 'desc' if order_by == 'fecha_tope' and order_direction == 'asc' else 'asc' }}">
-                <img class="filter" src="{{ url_for('static', filename='up.png') if order_direction == 'asc' and order_by == 'fecha_tope' else (url_for('static', filename='down.png') if order_direction == 'desc' and order_by == 'fecha_tope' else url_for('static', filename='arrow-grey.png')) }}" alt="Ordenar">
+              <a href="/tickets/page/{{ current_page }}/fecha_tope/{{ 'desc' if order_direction == 'asc' else 'asc' }}">
+                <img class="filter" src="{{ url_for('static', filename='up.png') if order_direction == 'asc' and order_by == 'fecha_tope' else (url_for('static', filename='down.png') if order_direction == 'desc' and order_by == 'fecha_tope' else url_for('static', filename='arrow-grey.png')) }}" 
+                alt="Orden">
               </a>
             </span>
           </th>
           <th scope="col">
             <span>Prioridad
-              <a href="/tickets/page/{{ current_page }}/prioridad/{{ 'desc' if order_by == 'prioridad' and order_direction == 'asc' else 'asc' }}">
-                <img class="filter" src="{{ url_for('static', filename='up.png') if order_direction == 'asc' and order_by == 'prioridad' else (url_for('static', filename='down.png') if order_direction == 'desc' and order_by == 'prioridad' else url_for('static', filename='arrow-grey.png')) }}" alt="Ordenar">
+              <a href="/tickets/page/{{ current_page }}/fecha_tope/{{ 'desc' if order_direction == 'asc' else 'asc' }}">
+                <img class="filter" src="{{ url_for('static', filename='up.png') if order_direction == 'asc' and order_by == 'fecha_tope' else (url_for('static', filename='down.png') if order_direction == 'desc' and order_by == 'fecha_tope' else url_for('static', filename='arrow-grey.png')) }}" 
+                alt="Orden">
               </a>
             </span>
           </th>
@@ -36,24 +46,22 @@
       <tbody>
         {% for ticket in tickets %}
         <tr>
-          <td data-label="Estado">
-            <img class="filter" src="{{ url_for('static', filename='check-green.png') if ticket['estado'] else url_for('static', filename='check-grey.png') }}" alt="Estado">
-          </td>
-          <td data-label="Tarea">{{ ticket['tarea'] }}</td>
+          <td data-label="Estado"><img class="filter" src="{{ url_for('static', filename='check-green.png') if ticket[3] else url_for('static', filename='check-grey.png') }}" alt="Estado"></td>
+          <td data-label="Tarea">{{ ticket[4] }}</td>
           <td data-label="Caso"><a href="/casos/{{ ticket['caso_id'] }}">Ver</a></td>
           <td data-label="Contacto"><a href="/contactos/{{ ticket['contacto_id'] }}">Ver</a></td>
-          <td data-label="Fecha Tope">{{ ticket['fecha_tope'] }}</td>
+          <td data-label="Fecha Tope">{{ ticket[7][:10] or 'No asignada' }}</td>
           <td data-label="Prioridad">
             <span class="estado {% if ticket['prioridad'] == 'Alta' %}rojo{% elif ticket['prioridad'] == 'Media' %}amarillo{% else %}verde{% endif %}">
-              {{ ticket['prioridad'] }}
+              {{ fecha_tope }}
             </span>
           </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
-
-    <!-- Paginación -->
+    
+    <!-- Sección de Paginación -->
     <section class="pagination">
       {% if current_page > 1 %}
         <a href="/tickets/page/{{ current_page - 1 }}/{{ order_by }}/{{ order_direction }}"><<</a>

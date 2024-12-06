@@ -346,7 +346,7 @@ def get_join_case_records():
 
 def create_tickets_table(db_path="crm_law_firm.db"):
     """
-    Crea la tabla 'tickets' con los nuevos cambios.
+    Crea la tabla 'tickets' con la nueva columna 'fecha_tope'.
     """
     try:
         connection = sqlite3.connect(db_path)
@@ -365,6 +365,7 @@ def create_tickets_table(db_path="crm_law_firm.db"):
             tarea VARCHAR(50),
             descripcion VARCHAR(200),
             nota TEXT CHECK(LENGTH(nota) <= 300), -- Limitar las notas a 300 caracteres
+            fecha_tope TEXT, -- Nueva columna para la fecha límite
             fecha_creacion TEXT,
             fecha_cierre TEXT,
             FOREIGN KEY (asistente_id) REFERENCES asistentes(id),
@@ -373,7 +374,7 @@ def create_tickets_table(db_path="crm_law_firm.db"):
         """)
 
         connection.commit()
-        print("Tabla 'tickets' actualizada exitosamente.")
+        print("Tabla 'tickets' actualizada exitosamente con 'fecha_tope'.")
 
     except sqlite3.Error as e:
         print(f"Error al crear la tabla 'tickets': {e}")
@@ -383,7 +384,7 @@ def create_tickets_table(db_path="crm_law_firm.db"):
 
 def insert_sample_tickets_data(db_path="crm_law_firm.db"):
     """
-    Inserta 30 filas de datos de ejemplo en la tabla 'tickets' considerando los nuevos cambios.
+    Inserta 30 filas de datos de ejemplo en la tabla 'tickets', incluyendo 'fecha_tope'.
     """
     tareas = [
         "Revisar documentos",
@@ -424,11 +425,12 @@ def insert_sample_tickets_data(db_path="crm_law_firm.db"):
         descripcion = random.choice(descripciones)
         nota = None  # Mantenemos las notas sin datos
         fecha_creacion = today.strftime('%Y-%m-%d %H:%M:%S')
+        fecha_tope = (today + timedelta(days=random.randint(5, 15))).strftime('%Y-%m-%d %H:%M:%S')  # Fecha límite
         fecha_cierre = (
             (today + timedelta(days=random.randint(1, 30))).strftime('%Y-%m-%d %H:%M:%S') 
             if estado == 0 else None
         )
-        tickets_data.append((asistente_id, caso_id, estado, tarea, descripcion, nota, fecha_creacion, fecha_cierre))
+        tickets_data.append((asistente_id, caso_id, estado, tarea, descripcion, nota, fecha_tope, fecha_creacion, fecha_cierre))
 
     try:
         connection = sqlite3.connect(db_path)
@@ -436,8 +438,8 @@ def insert_sample_tickets_data(db_path="crm_law_firm.db"):
 
         # Insertar datos en la tabla 'tickets'
         cursor.executemany("""
-        INSERT INTO tickets (asistente_id, caso_id, estado, tarea, descripcion, nota, fecha_creacion, fecha_cierre)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+        INSERT INTO tickets (asistente_id, caso_id, estado, tarea, descripcion, nota, fecha_tope, fecha_creacion, fecha_cierre)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
         """, tickets_data)
 
         connection.commit()
@@ -521,6 +523,3 @@ def get_cases_join(order_by, order_direction='asc', limit=10, offset=0):
     records = cursor.fetchall()
     conn.close()
     return records
-
-create_tickets_table()
-insert_sample_tickets_data()

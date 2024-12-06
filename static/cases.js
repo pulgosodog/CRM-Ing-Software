@@ -62,7 +62,7 @@
                     </div>
                     <div>
                         <strong>Creación</strong><br>
-                        ${creacion}
+                        ${creacion.split(' ')[0]}
                     </div>
                 `;
             });

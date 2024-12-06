@@ -1,5 +1,7 @@
 from flask import Flask, render_template, Blueprint, request, redirect, url_for, flash, jsonify
 
+from datetime import datetime
+
 from db_connection import get_total_records, get_records, insertar_cliente, get_join_case_records, get_cases_join
 
 
@@ -88,6 +90,45 @@ def tickets(page, order_by, order_direction):
     total_records = get_total_records('tickets')
     total_pages = (total_records + per_page - 1) // per_page  # Redondeo hacia arriba
 
+    def calcular_prioridad(fecha_tope):
+        # Extraer el valor de la fecha_tope desde la tupla
+
+        # Imprimir el tipo y el valor de fecha_tope para depuración
+        print("Tipo de fecha_tope:", type(fecha_tope))
+        print("Valor de fecha_tope:", fecha_tope)
+
+        # Verificar si fecha_tope es una cadena de texto
+        if isinstance(fecha_tope, str):
+            try:
+                # Parsear la fecha con el formato adecuado
+                fecha_tope_obj = datetime.strptime(fecha_tope, '%Y-%m-%d %H:%M:%S')
+
+                # Extraer solo la fecha (sin la hora)
+                fecha_tope_obj = fecha_tope_obj.date()
+
+                # Calcular la diferencia de días entre la fecha actual y la fecha tope
+                hoy = datetime.today().date()
+                diferencia_dias = (fecha_tope_obj - hoy).days
+
+                # Asignar la prioridad según los días restantes
+                if diferencia_dias <= 3:
+                    prioridad = 'Alta'
+                elif diferencia_dias <= 7:
+                    prioridad = 'Media'
+                else:
+                    prioridad = 'Baja'
+
+                return prioridad
+
+            except ValueError:
+                print("Formato de fecha incorrecto. Asegúrate de que esté en formato 'YYYY-MM-DD HH:MM:SS'")
+        else:
+            print("Fecha tope no es una cadena de texto válida.")
+
+        
+    print("Tipo de fecha_tope:", type(tickets[7]))
+    print("Valor de fecha_tope:", tickets[7][7])
+
     # Pasar los datos y las variables necesarias al template
     return render_template(
         "tickets.html",
@@ -96,7 +137,8 @@ def tickets(page, order_by, order_direction):
         total_pages=total_pages,
         message="Tickets",
         order_by=order_by,
-        order_direction=order_direction
+        order_direction=order_direction,
+        fecha_tope = calcular_prioridad(tickets[7][7])
     )
 
 @app.route('/cases', defaults={'page': 1, 'order_by': 'nombre_caso', 'order_direction': 'asc'})
