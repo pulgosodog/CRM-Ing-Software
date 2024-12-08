@@ -216,6 +216,29 @@ h2 {
   text-decoration: none;
 }
 
+.btn {
+  padding: 10px 15px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+.modal-header {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.modal-body {
+  text-align: left;
+}
+
+
 /* Form styles */
 form {
   display: grid;

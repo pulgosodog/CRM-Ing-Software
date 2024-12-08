@@ -2,7 +2,7 @@ from flask import Flask, render_template, Blueprint, request, redirect, url_for,
 
 from datetime import datetime
 
-from db_connection import get_total_records, get_records, insertar_cliente, get_join_case_records, get_cases_join, get_total_records_by_client, get_tickets_case_id
+from db_connection import get_total_records, get_records, insertar_cliente, get_join_case_records, get_cases_join, get_total_records_by_client, get_where, get_id_cliente_from_tickets
 
 
 views = Blueprint('views', __name__)
@@ -91,11 +91,6 @@ def tickets(page, order_by, order_direction):
     total_pages = (total_records + per_page - 1) // per_page  # Redondeo hacia arriba
 
     def calcular_prioridad(fecha_tope):
-        # Extraer el valor de la fecha_tope desde la tupla
-
-        # Imprimir el tipo y el valor de fecha_tope para depuración
-        print("Tipo de fecha_tope:", type(fecha_tope))
-        print("Valor de fecha_tope:", fecha_tope)
 
         # Verificar si fecha_tope es una cadena de texto
         if isinstance(fecha_tope, str):
@@ -125,9 +120,6 @@ def tickets(page, order_by, order_direction):
         else:
             print("Fecha tope no es una cadena de texto válida.")
 
-        
-    print("Tipo de fecha_tope:", type(tickets[7]))
-    print("Valor de fecha_tope:", tickets[7][7])
 
     # Pasar los datos y las variables necesarias al template
     return render_template(
@@ -140,6 +132,13 @@ def tickets(page, order_by, order_direction):
         order_direction=order_direction,
         fecha_tope = calcular_prioridad(tickets[7][7])
     )
+
+@app.route('/client/<int:client_id>', defaults={'client_id': 1})
+@app.route('/client/<int:client_id>')
+def client_serve_by_id(client_id):
+    info = get_where("clientes","id", get_id_cliente_from_tickets(client_id),"nombre_completo")
+    print(info)
+    return jsonify(info)
 
 @app.route('/cases', defaults={'page': 1, 'order_by': 'nombre_caso', 'order_direction': 'asc'})
 @app.route('/cases/page/<int:page>/<order_by>/<order_direction>')
@@ -193,7 +192,7 @@ def cases_by_client(client_id, page, order_by, order_direction):
 @app.route('/cases/<int:case_id>', defaults={'case_id': 1})
 @app.route('/cases/<int:case_id>')
 def tickets_cases_serve(case_id):
-    notas = get_tickets_case_id(case_id)
+    notas = get_where("tickets","caso_id", case_id,"fecha_tope")
     return jsonify(notas)
 
 

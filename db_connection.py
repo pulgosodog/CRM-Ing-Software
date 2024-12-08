@@ -562,3 +562,39 @@ def get_tickets_case_id(caso_id):
       
       conn.close()
       return records
+
+def get_where(table, column, parameter, order_by):
+    conn = conectar()
+    cursor = conn.cursor()
+    
+    # Construir la consulta de forma segura
+    query = f"""
+    SELECT * FROM {table} 
+    WHERE {column} = ? 
+    ORDER BY {order_by} DESC
+    """
+    
+    cursor.execute(query, (parameter,))
+    records = cursor.fetchall()
+    
+    conn.close()
+    return records
+
+def get_id_cliente_from_tickets(id_ticket):
+    conn = conectar()
+    cursor = conn.cursor()
+    
+    query = """
+    SELECT clientes.id
+    FROM tickets
+    JOIN casos ON tickets.caso_id = casos.id
+    JOIN clientes ON casos.id_cliente = clientes.id
+    WHERE tickets.id = ?;
+    """
+    cursor.execute(query, (id_ticket,))
+    id_cliente = cursor.fetchone()
+    
+    conn.close()
+    print("get_id_cliente_from_tickets")
+    print(id_cliente)
+    return id_cliente[0] if id_cliente else None
