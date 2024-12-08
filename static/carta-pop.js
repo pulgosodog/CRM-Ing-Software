@@ -15,6 +15,7 @@ verBtns.forEach(btn => {
     // Llenar la información del cliente en el pop-up
     document.getElementById("telefono").textContent = telefono;
     document.getElementById("email").textContent = email;
+    document.getElementById('email').href = `mailto:${email}`;
   });
 });
 
