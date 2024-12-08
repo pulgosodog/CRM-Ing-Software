@@ -2,7 +2,7 @@ from flask import Flask, render_template, Blueprint, request, redirect, url_for,
 
 from datetime import datetime
 
-from db_connection import get_total_records, get_records, insertar_cliente, get_join_case_records, get_cases_join
+from db_connection import get_total_records, get_records, insertar_cliente, get_join_case_records, get_cases_join, get_total_records_by_client, get_tickets_case_id
 
 
 views = Blueprint('views', __name__)
@@ -165,6 +165,36 @@ def cases(page, order_by, order_direction):
         order_direction=order_direction
     )
 
+@app.route('/cases/client/<int:client_id>', defaults={'page': 1, 'order_by': 'nombre_caso', 'order_direction': 'asc'})
+@app.route('/cases/client/<int:client_id>/page/<int:page>/<order_by>/<order_direction>')
+def cases_by_client(client_id, page, order_by, order_direction):
+    message = f"Casos del Cliente {client_id}"
+    per_page = 9  # Número de registros por página
+    offset = (page - 1) * per_page  # Calcular el desplazamiento para la paginación
+
+    # Obtener los casos filtrados por el ID del cliente
+    casos = get_cases_join(client_id=client_id, order_by=order_by, order_direction=order_direction, limit=per_page, offset=offset)
+    
+    # Obtener el número total de registros para calcular el número de páginas
+    total_records = get_total_records_by_client(client_id)
+    total_pages = (total_records + per_page - 1) // per_page  # Redondeo hacia arriba
+
+    # Pasar los datos y las variables necesarias al template
+    return render_template(
+        "cases.html",
+        casos=casos,
+        current_page=page,
+        total_pages=total_pages,
+        message=message,
+        order_by=order_by,
+        order_direction=order_direction
+    )
+
+@app.route('/cases/<int:case_id>', defaults={'case_id': 1})
+@app.route('/cases/<int:case_id>')
+def tickets_cases_serve(case_id):
+    notas = get_tickets_case_id(case_id)
+    return jsonify(notas)
 
 
 @app.route('/report')

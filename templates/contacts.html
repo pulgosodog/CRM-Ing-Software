@@ -44,7 +44,7 @@
           <td data-label="Fecha de nacimiento">{{ cliente[5] }}</td>
           <td data-label="Contactos"><button class="verBtn" data-nombre="{{ cliente[1] }}"
               data-telefono="{{ cliente[2] }}" data-email="{{ cliente[3] }}">Ver</button></td>
-          <td data-label="Casos"><a href="/casos/{{ cliente[1] }}">Ver</a></td>
+          <td data-label="Casos"><a href="/cases/client/{{ cliente[0] }}">Ver</a></td>
           <td data-label="Actividad">
             <span class="estado {% if cliente[6] == 'Activo' %}verde{% else %}gris{% endif %}">
               {{ cliente[6] }}

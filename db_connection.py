@@ -483,7 +483,7 @@ def get_records(table_name, order_by, order_direction='asc', limit=10, offset=0)
     conn.close()
     return records
 
-def get_cases_join(order_by, order_direction='asc', limit=10, offset=0):
+def get_cases_join(order_by, order_direction='asc', limit=10, offset=0, client_id=None):
     conn = conectar()
     cursor = conn.cursor()
 
@@ -517,9 +517,48 @@ def get_cases_join(order_by, order_direction='asc', limit=10, offset=0):
     INNER JOIN clientes ON casos.id_cliente = clientes.id
     LEFT JOIN abogados ON casos.id_abogado = abogados.id
     LEFT JOIN asistentes ON casos.id_asistente = asistentes.id
-    ORDER BY {order_by} {order_direction} LIMIT ? OFFSET ?
     """
-    cursor.execute(query, (limit, offset))
+    
+    if client_id:
+        query += " WHERE casos.id_cliente = ?"
+
+    # Ordenar y limitar los resultados
+    query += f" ORDER BY {order_by} {order_direction} LIMIT ? OFFSET ?"
+    
+    if client_id:
+        cursor.execute(query, (client_id, limit, offset))
+    else:
+        cursor.execute(query, (limit, offset))
+
     records = cursor.fetchall()
     conn.close()
     return records
+
+def get_total_records_by_client(client_id):
+    conn = conectar()
+    cursor = conn.cursor()
+    
+    # Consulta con filtro por cliente
+    query = "SELECT COUNT(*) FROM casos WHERE id_cliente = ?"
+    cursor.execute(query, (client_id,))
+    total_records = cursor.fetchone()[0]
+    
+    conn.close()
+    return total_records
+
+def get_tickets_case_id(caso_id):
+      conn = conectar()
+      cursor = conn.cursor()
+  
+      # Usar parámetros dinámicos y construir la consulta
+      query = """
+    SELECT * FROM tickets 
+    WHERE caso_id = ? 
+    ORDER BY fecha_cierre DESC
+    """
+      
+      cursor.execute(query,(caso_id,))
+      records = cursor.fetchall()
+      
+      conn.close()
+      return records
