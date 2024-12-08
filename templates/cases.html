@@ -19,18 +19,18 @@
                         </span>
                     </th>
                     <th><span>Estado<a
-                            href="/cases/page/{{ current_page }}/estado/{{ 'desc' if order_direction == 'asc' else 'asc' }}">
-                            <img class="filter" src="{{ url_for('static', filename='up.png') if order_direction == 'asc' and order_by == 'estado' else (url_for('static', filename='down.png') if order_direction == 'desc' and order_by == 'estado' else url_for('static', filename='arrow-grey.png')) }}
+                                href="/cases/page/{{ current_page }}/estado/{{ 'desc' if order_direction == 'asc' else 'asc' }}">
+                                <img class="filter" src="{{ url_for('static', filename='up.png') if order_direction == 'asc' and order_by == 'estado' else (url_for('static', filename='down.png') if order_direction == 'desc' and order_by == 'estado' else url_for('static', filename='arrow-grey.png')) }}
                     " alt="Orden">
-                        </a>
-                    </span>
+                            </a>
+                        </span>
                     </th>
                     <th><span>Prioridad<a
-                            href="/cases/page/{{ current_page }}/prioridad/{{ 'desc' if order_direction == 'asc' else 'asc' }}">
-                            <img class="filter" src="{{ url_for('static', filename='up.png') if order_direction == 'asc' and order_by == 'prioridad' else (url_for('static', filename='down.png') if order_direction == 'desc' and order_by == 'prioridad' else url_for('static', filename='arrow-grey.png')) }}
+                                href="/cases/page/{{ current_page }}/prioridad/{{ 'desc' if order_direction == 'asc' else 'asc' }}">
+                                <img class="filter" src="{{ url_for('static', filename='up.png') if order_direction == 'asc' and order_by == 'prioridad' else (url_for('static', filename='down.png') if order_direction == 'desc' and order_by == 'prioridad' else url_for('static', filename='arrow-grey.png')) }}
                 " alt="Orden">
-                        </a>
-                    </span>
+                            </a>
+                        </span>
                     </th>
                 </tr>
             </thead>
@@ -81,52 +81,44 @@
     </div>
 
     <div class="case-details">
-
+        <h3>Detalles de caso</h3>
+        <div>
+            <strong>ID de caso</strong><br>
+            <p></p>
+        </div>
+        <div>
+            <strong>Nombre de caso</strong><br>
+            <p></p>
+        </div>
+        <div>
+            <strong>Estado</strong><br>
+            <p></p>
+        </div>
+        <div>
+            <strong>Abogado(s) encargado(s)</strong><br>
+            <p></p>
+        </div>
+        <div>
+            <strong>Cliente</strong><br>
+            <p></p>
+        </div>
+        <div>
+            <strong>Tipo de caso</strong><br>
+            <p></p>
+        </div>
+        <div>
+            <strong>Prioridad</strong><br>
+            <p></p>
+        </div>
+        <div>
+            <strong>Creación</strong><br>
+            <p></p>
+        </div>
     </div>
 
     <!-- Notes Section -->
     <div class="notes-section">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Fecha de Creación</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Negó Documentos</td>
-                    <td>2024-11-01</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Llamar de Nuevo</td>
-                    <td>2024-10-15</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Citación a Caso</td>
-                    <td>2024-11-05</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>Revisión de Evidencias</td>
-                    <td>2024-09-20</td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td>Solicitud de Documentos</td>
-                    <td>2024-11-10</td>
-                </tr>
-                <tr>
-                    <td>6</td>
-                    <td>Agendar Audiencia</td>
-                    <td>2024-11-18</td>
-                </tr>
-            </tbody>
-        </table>
+
     </div>
 </div>
 <script src="{{ url_for('static', filename='cases.js') }}"></script>

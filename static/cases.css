@@ -28,13 +28,15 @@
 
 .case-details {
     display: flex;
+    flex: 0.8;
     flex-direction: column;
     gap: 15px;
 }
 
 .notes-section {
+    max-height: 87vh;
     flex: 2;
-    overflow-x: auto;
+    overflow-y: auto;
 }
 
 .case-details a {
