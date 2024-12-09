@@ -578,6 +578,7 @@ def get_where(table, column, parameter, order_by):
     records = cursor.fetchall()
     
     conn.close()
+    print(records)
     return records
 
 def get_id_cliente_from_tickets(id_ticket):

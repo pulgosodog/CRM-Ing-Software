@@ -22,7 +22,7 @@ th span img {
 
 header {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   background-color: white;
 }
 
@@ -33,6 +33,23 @@ h1 {
 
 h2 {
   margin: 0
+}
+
+h3 {
+  text-align: center;
+  width: 100%;
+}
+
+#reloj {
+  font-family: 'Arial', sans-serif;
+  color: #333;
+  text-align: center;
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  width: 150px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
 }
 
 #contacts-tools h3 {

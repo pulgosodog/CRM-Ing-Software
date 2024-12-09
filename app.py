@@ -42,7 +42,6 @@ def contacts(page, order_by, order_direction):
 @app.route('/add-client', methods=['POST'])
 def add_client():
     try:
-        print("Ruta tocada")  # Confirmación de que la ruta es llamada
 
         # Asegurarse de recibir JSON
         data = request.get_json()
@@ -137,7 +136,6 @@ def tickets(page, order_by, order_direction):
 @app.route('/client/<int:client_id>')
 def client_serve_by_id(client_id):
     info = get_where("clientes","id", get_id_cliente_from_tickets(client_id),"nombre_completo")
-    print(info)
     return jsonify(info)
 
 @app.route('/cases', defaults={'page': 1, 'order_by': 'nombre_caso', 'order_direction': 'asc'})
@@ -195,6 +193,11 @@ def tickets_cases_serve(case_id):
     notas = get_where("tickets","caso_id", case_id,"fecha_tope")
     return jsonify(notas)
 
+@app.route('/asistente/<int:asistente_id>', defaults={'asistente_id': 1})
+@app.route('/asistente/<int:asistente_id>')
+def get_asistente(asistente_id):
+    info = get_where("asistentes","id", asistente_id,"nombre_completo")
+    return jsonify(info)
 
 @app.route('/report')
 def report():

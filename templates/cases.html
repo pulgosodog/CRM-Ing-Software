@@ -81,7 +81,13 @@
     </div>
 
     <div class="case-details">
-        <h3>Detalles de caso</h3>
+        <table>
+            <thead>
+                <tr>
+                <h3>Detalles de caso</h3>
+                </tr>
+            </thead>                       
+        </table>
         <div>
             <strong>ID de caso</strong><br>
             <p></p>
@@ -118,7 +124,19 @@
 
     <!-- Notes Section -->
     <div class="notes-section">
-
+        <h3>Tickets asociados al caso</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID de Ticket</th>
+                    <th>Nombre</th>
+                    <th>Fecha de Creación</th>
+                    <th>Fecha de Creación</th>
+                </tr>
+            </thead>
+            <tbody id="notas">
+            </tbody>
+        </table>`
     </div>
 </div>
 <script src="{{ url_for('static', filename='cases.js') }}"></script>
