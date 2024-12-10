@@ -14,20 +14,20 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='calendar.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='cases.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='carta-pop.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='report.css') }}">
 </head>
 
 <body>
   <header>
     <a href="/"><h1>CRM Despacho de abogados</h1></a>
     <div id="reloj" style="font-size: 24px; font-weight: bold;"></div>
-    <div class="account-select"><img src="{{ url_for('static', filename='manager.png') }}"
-        alt="manager-pic"><span>gabriel.admin</span></div>
+    <div class="account-select">{{ session.get('username', 'Invitado') }}</span><a id="logout-img" href="/logout"><img src="{{ url_for('static', filename='logout.png') }}" alt=""></a></div>
   </header>
   <div id="dashboard">
     <div id="tool-select">
+      <a href="/"><img src="{% if message == 'Report' %}{{ url_for('static', filename='bar-chart-white.png') }}{% else %}{{ url_for('static', filename='bar-chart-grey.png') }}{% endif %}" alt=""></a>
       <a href="/contacts"><img src="{% if message == 'Clientes' %}{{ url_for('static', filename='contact-book-white.png') }}{% else %}{{ url_for('static', filename='contact-book-grey.png') }}{% endif %}" alt=""></a>
       <a href="/tickets"><img src="{% if message == 'Tickets' %}{{ url_for('static', filename='checklist-white.png') }}{% else %}{{ url_for('static', filename='checklist-grey.png') }}{% endif %}" alt=""></a>
       <a href="/cases"><img src="{% if message == 'Casos' %}{{ url_for('static', filename='case-white.png') }}{% else %}{{ url_for('static', filename='case-grey.png') }}{% endif %}" alt=""></a>
-      <a href="/report"><img src="{% if message == 'Report' %}{{ url_for('static', filename='bar-chart-white.png') }}{% else %}{{ url_for('static', filename='bar-chart-grey.png') }}{% endif %}" alt=""></a>
       <a href="/calendar"><img src="{% if message == 'Calendar' %}{{ url_for('static', filename='calendar-white.png') }}{% else %}{{ url_for('static', filename='calendar-grey.png') }}{% endif %}" alt=""></a>
     </div>

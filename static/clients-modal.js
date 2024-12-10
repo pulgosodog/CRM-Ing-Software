@@ -13,15 +13,15 @@ ticketsRows.forEach(row => {
       fetch(`/client/${ticketId}`)
       .then(response => response.json())  // Convierte la respuesta a JSON
       .then(cliente => {
-        console.log(cliente)
+        console.log(cliente[0])
       if (cliente == null) throw new Error('Error al obtener datos');
       modalContent.innerHTML = `
-        <p><strong>ID:</strong> ${cliente[0][0]}</p>
-        <p><strong>Nombre completo:</strong> ${cliente[0][1]}</p>
-        <p><strong>Teléfono:</strong> ${cliente[0][2]}</p>
-        <p><strong>Email:</strong> ${cliente[0][3]}</p>
-        <p><strong>Preferencia de contacto:</strong> ${cliente[0][4]}</p>
-        <p><strong>Fecha de nacimiento:</strong> ${cliente[0][5]}</p>
+        <p><strong>ID:</strong> ${cliente[0].id}</p>
+        <p><strong>Nombre completo:</strong> ${cliente[0].nombre_completo}</p>
+        <p><strong>Teléfono:</strong> ${cliente[0].telefono}</p>
+        <p><strong>Email:</strong> ${cliente[0].email}</p>
+        <p><strong>Preferencia de contacto:</strong> ${cliente[0].correo}</p>
+        <p><strong>Fecha de nacimiento:</strong> ${cliente[0].fecha_nacimiento}</p>
       `;
     })
       .catch (error => modalContent.innerHTML = '<p>Error al cargar los datos del cliente.</p>')

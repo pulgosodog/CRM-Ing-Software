@@ -1,6 +1,7 @@
 {% include 'header.html' %}
 
 <section id="charts">
+  <h3>Bienvenido {{ nombre }} </h3>
     <div class="container horizontal rounded">
       <h2>Horizontal, Rounded</h2>
       <div class="progress-bar horizontal">
@@ -214,17 +215,10 @@
         </div>
       </div>
     </div>
+
   </section>
 
-  <section class="pagination">
-    <a href="#" class="active">1</a>
-    <a href="#">2</a>
-    <a href="#">3</a>
-    <a href="#">4</a>
-    <a href="#">5</a>
-    <a href="#">Next</a>
-  </section>
-</div>
-</div>
-<script src="{{ url_for('static', filename='barChart.js') }}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ url_for('static', filename='report.js') }}"></script>
+
   {% include 'footer.html' %}

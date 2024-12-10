@@ -1,8 +1,8 @@
-from flask import Flask, render_template, Blueprint, request, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, Blueprint, request, redirect, url_for, flash, jsonify, session
 
 from datetime import datetime
 
-from db_connection import get_total_records, get_records, insertar_cliente, get_join_case_records, get_cases_join, get_total_records_by_client, get_where, get_id_cliente_from_tickets
+from db_connection import get_total_records, get_records, insertar_cliente, get_cases_join, get_total_records_by_client, get_where, get_id_cliente_from_tickets, conectar, login_required, role_required
 
 
 views = Blueprint('views', __name__)
@@ -11,12 +11,56 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Necesario para usar flash mensajes
 
 @app.route('/')
+@login_required
 def home():
-    message = "Elige una herramienta"
-    return render_template('index.html', message=message)
+    user_name = None
+    # user_tickets = []
+    # user_cases = []
+    if session['rol'] == 'abogado' and session.get('id_abogado'):
+        user_data = get_where('abogados', 'id', session['id_abogado'])
+        # user_tickets = get_user_related_data('abogado', session['id_abogado'], 'tickets', 'id_abogado', 'fecha')
+        # user_cases = get_user_related_data('abogado', session['id_abogado'], 'casos', 'id_abogado', 'fecha')
+    elif session['rol'] == 'asistente' and session.get('id_asistente'):
+        user_data = get_where('asistentes', 'id', session['id_asistente'])
+        # user_tickets = get_where('asistente', session['id_asistente'], 'tickets', 'id_asistente', 'fecha')
+        # user_cases = get_user_related_data('asistente', session['id_asistente'], 'casos', 'id_asistente', 'fecha')
+    nombre = user_data[0]['nombre_completo']
+    message = "Report"
+    return render_template('report.html', message=message, nombre = nombre)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        
+        conn = conectar()
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT username, rol, id_abogado, id_asistente FROM usuarios WHERE username = ? AND password = ?",
+            (username, password)
+        )
+        user = cursor.fetchone()
+        
+        if user:
+            session['username'] = user[0]
+            session['rol'] = user[1]
+            session['id_abogado'] = user[2]
+            session['id_asistente'] = user[3]
+            return redirect('/')
+        else:
+            return render_template('login.html', error_message= True)
+    
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/login')
 
 @app.route('/contacts', defaults={'page': 1, 'order_by': 'nombre_completo', 'order_direction': 'asc'})
 @app.route('/contacts/page/<int:page>/<order_by>/<order_direction>')
+@login_required
 def contacts(page, order_by, order_direction):
     per_page = 10  # Número de registros por página
     offset = (page - 1) * per_page  # Calcular el desplazamiento
@@ -40,6 +84,7 @@ def contacts(page, order_by, order_direction):
     )
 
 @app.route('/add-client', methods=['POST'])
+@login_required
 def add_client():
     try:
 
@@ -73,11 +118,10 @@ def add_client():
         print(f"Error en la ruta /add-client: {e}")
         return jsonify({'message': 'Error en el servidor'}), 500
 
-    # Redirige a la página donde se muestran los clientes
-    return redirect('/contacts')
 
 @app.route('/tickets', defaults={'page': 1, 'order_by': 'id', 'order_direction': 'asc'})
 @app.route('/tickets/page/<int:page>/<order_by>/<order_direction>')
+@login_required
 def tickets(page, order_by, order_direction):
     per_page = 10  # Número de registros por página
     offset = (page - 1) * per_page  # Calcular el desplazamiento
@@ -134,12 +178,14 @@ def tickets(page, order_by, order_direction):
 
 @app.route('/client/<int:client_id>', defaults={'client_id': 1})
 @app.route('/client/<int:client_id>')
+@login_required
 def client_serve_by_id(client_id):
     info = get_where("clientes","id", get_id_cliente_from_tickets(client_id),"nombre_completo")
     return jsonify(info)
 
 @app.route('/cases', defaults={'page': 1, 'order_by': 'nombre_caso', 'order_direction': 'asc'})
 @app.route('/cases/page/<int:page>/<order_by>/<order_direction>')
+@login_required
 def cases(page, order_by, order_direction):
     message = "Casos"
     per_page = 9  # Número de registros por página
@@ -164,6 +210,7 @@ def cases(page, order_by, order_direction):
 
 @app.route('/cases/client/<int:client_id>', defaults={'page': 1, 'order_by': 'nombre_caso', 'order_direction': 'asc'})
 @app.route('/cases/client/<int:client_id>/page/<int:page>/<order_by>/<order_direction>')
+@login_required
 def cases_by_client(client_id, page, order_by, order_direction):
     message = f"Casos del Cliente {client_id}"
     per_page = 9  # Número de registros por página
@@ -189,22 +236,26 @@ def cases_by_client(client_id, page, order_by, order_direction):
 
 @app.route('/cases/<int:case_id>', defaults={'case_id': 1})
 @app.route('/cases/<int:case_id>')
+@login_required
 def tickets_cases_serve(case_id):
     notas = get_where("tickets","caso_id", case_id,"fecha_tope")
     return jsonify(notas)
 
 @app.route('/asistente/<int:asistente_id>', defaults={'asistente_id': 1})
 @app.route('/asistente/<int:asistente_id>')
+@login_required
 def get_asistente(asistente_id):
     info = get_where("asistentes","id", asistente_id,"nombre_completo")
     return jsonify(info)
 
 @app.route('/report')
+@login_required
 def report():
     message = "Report"
     return render_template('report.html', message=message)
 
 @app.route('/calendar')
+@login_required
 def calendar():
     message = "Calendar"
     return render_template('calendar.html', message=message)

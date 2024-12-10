@@ -80,10 +80,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     caseTickets = data;
                     console.log(data);  // Verifica los datos recibidos en la consola
                     caseTickets.forEach(element => {
-                        fetch(`/asistente/${element[1]}`)
+                        fetch(`/asistente/${element.asistente_id}`)
                             .then(response => response.json())
                             .then(data => {
-                                nombresAsistente.push(data[0][1]);
+                                console.log("ahorita")
+                                console.log(data[0].nombre_completo)
+                                nombresAsistente.push(data[0].nombre_completo);
                             })
                             .catch(error => console.error('Error:', error));
                     });
@@ -112,16 +114,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             // Crea y llena cada <td> con los datos correspondientes
                             const td1 = document.createElement('td');
-                            td1.textContent = row[0];  // Columna 0 de SQL
+                            td1.textContent = row.id;  // Columna 0 de SQL
 
                             const td2 = document.createElement('td');
-                            td2.textContent = row[4];  // Columna 4 de SQL
+                            td2.textContent = row.tarea;  // Columna 4 de SQL
 
                             const td3 = document.createElement('td');
-                            td3.textContent = row[8].split(' ')[0];  // Columna 8 de SQL
+                            td3.textContent = row.fecha_creacion.split(' ')[0];  // Columna 8 de SQL
 
                             const td4 = document.createElement('td');
-                            td4.textContent = row[7].split(' ')[0];  // Columna 7 de SQL
+                            td4.textContent = row.fecha_tope.split(' ')[0];  // Columna 7 de SQL
 
                             // Agrega los <td> a la fila <tr>
                             tr.appendChild(td1);
@@ -134,11 +136,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
                         const ticketRows = document.querySelectorAll('.clickable-ticket');
                         ticketRows.forEach(row => {
-                            console.log(row);
                             row.addEventListener('click', () => {
                                 let id = row.querySelector('td').innerHTML
                                 for (let i = 0; i < caseTickets.length; i++) {
-                                    if (id == caseTickets[i][0]) {
+                                    if (id == caseTickets[i].id) {
+                                        console.log("Case Ticket", caseTickets[i])
                                         document.querySelector('.notes-section').innerHTML =
                                             `<button id="backButton">Volver</button>
                                             <table id="ticket-details">
@@ -152,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                                 <th>Asistente encargado</th>
                                             </tr>
                                             <tr>
-                                                <td>${caseTickets[i][0]}</td>
+                                                <td>${caseTickets[i].id}</td>
                                                 <td>${nombresAsistente[i]}</td>
                                             </tr>
                                             <tr>
@@ -160,8 +162,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                                 <th>Fecha Tope</th>
                                             </tr>
                                             <tr>
-                                                <td>${caseTickets[i][8].split(' ')[0]}</td>
-                                                <td>${caseTickets[i][7].split(' ')[0]}</td>
+                                                <td>${caseTickets[i].fecha_creacion.split(' ')[0]}</td>
+                                                <td>${caseTickets[i].fecha_tope.split(' ')[0]}</td>
                                             </tr>
                                             <tr>
                                                 <th colspan="2">Tarea</th>
@@ -173,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                             </tr>
                                             <tr>
                                                 <td colspan="2">
-                                                   ${caseTickets[i][5]}
+                                                   ${caseTickets[i].tarea}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -182,15 +184,15 @@ document.addEventListener('DOMContentLoaded', () => {
     
                                             </tr>
                                             <tr>
-                                                <td>${caseTickets[i][3] === 1 ? "Activo" : "Cerrado"}</td>
-                                                <td>${caseTickets[i][9] == null ? "Abierto" : caseTickets[i][9].split(' ')[0]}</td>
+                                                <td>${caseTickets[i].estado === 1 ? "Activo" : "Cerrado"}</td>
+                                                <td>${caseTickets[i].fecha_cierre == null ? "Abierto" : caseTickets[i].fecha_cierre.split(' ')[0]}</td>
                                             </tr>
                                             <tr>
                                                 <th colspan="2">Nota de asistente</th>
                                             </tr>
                                             <tr>
                                                 <td colspan="2">
-                                                ${caseTickets[i][6] == null ? "Sin notas" : caseTickets[i][6]}
+                                                ${caseTickets[i].nota == null ? "Sin notas" : caseTickets[i].nota}
                                                 </td>
                                             </tr>
                                         </table>`;
